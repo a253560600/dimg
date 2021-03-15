@@ -1,0 +1,22 @@
+#
+# Copyright (c) 2015-2021 by Gilles Caulier, <caulier dot gilles at gmail dot com>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
+add_subdirectory(antivignetting)
+add_subdirectory(blur)
+add_subdirectory(hotpixels)
+add_subdirectory(redeye)
+add_subdirectory(sharpen)
+add_subdirectory(restoration)
+add_subdirectory(localcontrast)
+add_subdirectory(noisereduction)
+add_subdirectory(lensdistortion)
+add_subdirectory(healingclone)
+if(LensFun_FOUND)
+    add_subdirectory(lensautofix)
+endif()
+
+# Not yet finalized
+#add_subdirectory(healingclone)
