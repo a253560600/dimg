@@ -40,7 +40,7 @@
 #include "dimg_p.h"
 #include "dmetadata.h"
 #include "dimgloaderobserver.h"
-#include "kmemoryinfo.h"
+//#include "kmemoryinfo.h"
 
 namespace Digikam
 {
@@ -172,6 +172,7 @@ qint64 DImgLoader::checkAllocation(qint64 fullSize)
         return 0;
     }
 
+    /*
     // Do extra check if allocating serious amounts of memory.
     // At the time of writing (2011), I consider 100 MB as "serious".
     if (fullSize > (qint64)(100 * 1024 * 1024))
@@ -200,6 +201,7 @@ qint64 DImgLoader::checkAllocation(qint64 fullSize)
             return 0;
         }
     }
+    */
 
     return fullSize;
 }

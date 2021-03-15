@@ -31,7 +31,5 @@
  * for each shared library targets.
  */
 #include "digikam_core_export.h"
-#include "digikam_database_export.h"
-#include "digikam_gui_export.h"
 
 #endif /* DIGIKAM_EXPORT_HEADERS_H */

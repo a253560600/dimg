@@ -98,17 +98,17 @@ public:
      * later (in a thread), or you can get a transform from displayTransform and apply it yourself.
      */
     void transformForDisplay();
-    void transformForDisplay(QWidget* const widget);
+    void transformForDisplay(QWindow* const widget);
     void transformForDisplay(const IccProfile& displayProfile);
 
-    static IccProfile displayProfile(QWidget* const displayingWidget = nullptr);
-    IccTransform displayTransform(QWidget* const displayingWidget = nullptr);
+    static IccProfile displayProfile(QWindow* const displayingWidget = nullptr);
+    IccTransform displayTransform(QWindow* const displayingWidget = nullptr);
     IccTransform displayTransform(const IccProfile& displayProfile);
 
     /**
      * Returns a display transform, with soft-proofing enabled for the given device profile.
      */
-    IccTransform displaySoftProofingTransform(const IccProfile& deviceProfile, QWidget* const displayingWidget = nullptr);
+    IccTransform displaySoftProofingTransform(const IccProfile& deviceProfile, QWindow* const displayingWidget = nullptr);
     IccTransform displaySoftProofingTransform(const IccProfile& deviceProfile, const IccProfile& displayProfile);
 
     /**

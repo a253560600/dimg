@@ -470,11 +470,54 @@ bool DImg::isAnimatedImage(const QString& filePath)
     return false;
 }
 
+//Adapted from LoadSaveThread::exifOrientation
+int LoadSaveThread_exifOrientation(const QString& filePath,
+                                    const DMetadata& metadata,
+                                    bool isRaw,
+                                    bool fromRawEmbeddedPreview)
+{
+    int dbOrientation = MetaEngine::ORIENTATION_UNSPECIFIED;
+
+    int exifOrientation = metadata.getItemOrientation();
+
+    // Raw files are already rotated properly by Raw engine. Only perform auto-rotation with JPEG/PNG/TIFF file.
+    // We don't have a feedback from Raw engine about auto-rotated RAW file during decoding.
+
+    if (isRaw && !fromRawEmbeddedPreview)
+    {
+        // Did the user apply any additional rotation over the metadata flag?
+
+        if (dbOrientation == MetaEngine::ORIENTATION_UNSPECIFIED || dbOrientation == exifOrientation)
+        {
+            return MetaEngine::ORIENTATION_NORMAL;
+        }
+
+        // Assume A is the orientation as from metadata, B is an additional operation applied by the user,
+        // C is the current orientation in the database.
+        // A*B = C and B = A_inv * C
+
+        QMatrix A     = MetaEngineRotation::toMatrix((MetaEngine::ImageOrientation)exifOrientation);
+        QMatrix C     = MetaEngineRotation::toMatrix((MetaEngine::ImageOrientation)dbOrientation);
+        QMatrix A_inv = A.inverted();
+        QMatrix B     = A_inv * C;
+        MetaEngineRotation m(B.m11(), B.m12(), B.m21(), B.m22());
+
+        return m.exifOrientation();
+    }
+
+    if (dbOrientation != MetaEngine::ORIENTATION_UNSPECIFIED)
+    {
+        return dbOrientation;
+    }
+
+    return exifOrientation;
+}
+
 int DImg::exifOrientation(const QString& filePath)
 {
     QVariant preview(attribute(QLatin1String("fromRawEmbeddedPreview")));
 
-    return LoadSaveThread::exifOrientation(filePath,
+    return LoadSaveThread_exifOrientation(filePath,
                                            DMetadata(getMetadata()),
                                            (detectedFormat() == DImg::RAW),
                                            (preview.isValid() && preview.toBool()));

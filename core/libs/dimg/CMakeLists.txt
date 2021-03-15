@@ -46,21 +46,21 @@ set(libdimgfilters_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/raw/rawprocessingfilter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/raw/drawdecoding.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/decorate/borderfilter.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/decorate/bordersettings.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/decorate/bordersettings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/decorate/bordercontainer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/decorate/texturecontainer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/decorate/texturefilter.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/decorate/texturesettings.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/decorate/texturesettings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/film/filmfilter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/fx/blurfilter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/fx/blurfxfilter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/fx/colorfxfilter.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/fx/colorfxsettings.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/fx/colorfxsettings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/fx/distortionfxfilter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/fx/charcoalfilter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/fx/embossfilter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/fx/filmgrainfilter.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/fx/filmgrainsettings.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/fx/filmgrainsettings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/fx/invertfilter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/fx/oilpaintfilter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/fx/raindropfilter.cpp
@@ -70,75 +70,75 @@ set(libdimgfilters_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/auto/stretchfilter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/auto/normalizefilter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/cb/cbfilter.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/cb/cbsettings.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/cb/cbsettings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/bcg/bcgfilter.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/bcg/bcgsettings.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/bcg/bcgsettings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/bcg/bcgcontainer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/bw/bwsepiafilter.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/bw/bwsepiasettings.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/bw/bwsepiasettings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/bw/tonalityfilter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/bw/infraredfilter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/bw/mixerfilter.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/bw/mixersettings.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/bw/mixersettings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/hsl/hslfilter.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/hsl/hslsettings.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/hsl/hspreviewwidget.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/hotpixels/blackframeparser.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/hotpixels/blackframelistview.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/hotpixels/blackframelistviewitem.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/hotpixels/blackframetooltip.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/hsl/hslsettings.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/hsl/hspreviewwidget.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/hotpixels/blackframeparser.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/hotpixels/blackframelistview.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/hotpixels/blackframelistviewitem.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/hotpixels/blackframetooltip.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/hotpixels/hotpixelprops.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/hotpixels/hotpixelfixer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/hotpixels/hotpixelsweights.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/hotpixels/hotpixelsettings.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/hotpixels/hotpixelsettings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/hotpixels/hotpixelcontainer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/icc/iccmanager.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/icc/iccprofile.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/icc/iccprofilesettings.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/icc/iccprofilesettings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/icc/icctransform.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/icc/icctransformfilter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/icc/iccsettingscontainer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/icc/iccsettings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/icc/digikam-lcms.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/lc/localcontrastfilter.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/lc/localcontrastsettings.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/lc/localcontrastsettings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/lc/localcontrastcontainer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/nr/nrfilter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/nr/nrestimate.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/nr/nrsettings.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/nr/nrsettings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/sharp/sharpenfilter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/sharp/unsharpmaskfilter.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/sharp/sharpsettings.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/sharp/sharpsettings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/levels/imagelevels.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/levels/levelsfilter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/levels/imagehistogram.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/levels/histogrambox.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/levels/histogramwidget.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/levels/histogrampainter.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/levels/histogrambox.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/levels/histogramwidget.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/levels/histogrampainter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/curves/curvescontainer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/curves/imagecurves.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/curves/curvesfilter.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/curves/curvessettings.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/curves/curveswidget.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/curves/curvesbox.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/curves/curvessettings.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/curves/curveswidget.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/curves/curvesbox.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/wb/wbcontainer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/wb/wbfilter.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/wb/wbsettings.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/wb/wbsettings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/transform/freerotationfilter.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/transform/freerotationsettings.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/transform/freerotationsettings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/transform/shearfilter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/transform/autocrop.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/greycstoration/greycstorationfilter.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/greycstoration/greycstorationsettings.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/greycstoration/greycstorationfilter.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/greycstoration/greycstorationsettings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/lens/antivignettingfilter.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/lens/antivignettingsettings.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/lens/antivignettingsettings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/lens/lensdistortionfilter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/lens/lensdistortionpixelaccess.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/redeye/redeyecorrectionfilter.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/redeye/redeyecorrectionsettings.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/redeye/redeyecorrectioncontainer.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/redeye/redeyecorrectionfilter.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/redeye/redeyecorrectionsettings.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/redeye/redeyecorrectioncontainer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/imgqsort/imagequalitycontainer.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/imgqsort/imagequalitysettings.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/filters/imgqsort/imagequalitysettings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/imgqsort/imagequalityparser.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/imgqsort/imagequalityparser_blur.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/imgqsort/imagequalityparser_exposure.cpp
@@ -184,7 +184,7 @@ if(LensFun_FOUND)
         ${CMAKE_CURRENT_SOURCE_DIR}/filters/lens/lensfunfilter.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/filters/lens/lensfuncameraselector.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/filters/lens/lensfuniface.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/filters/lens/lensfunsettings.cpp
+        #${CMAKE_CURRENT_SOURCE_DIR}/filters/lens/lensfunsettings.cpp
     )
 
     include_directories(${LENSFUN_INCLUDE_DIRS})
@@ -205,10 +205,10 @@ endif()
 
 set(libdimgloaders_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/loaders/dimgloader.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/loaders/jpegsettings.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/loaders/pngsettings.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/loaders/tiffsettings.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/loaders/pgfsettings.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/loaders/jpegsettings.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/loaders/pngsettings.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/loaders/tiffsettings.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/loaders/pgfsettings.cpp
 )
 
 # JPEG2000 support
@@ -217,7 +217,7 @@ if(Jasper_FOUND)
 
     set(libdimgloaders_SRCS
         ${libdimgloaders_SRCS}
-        ${CMAKE_CURRENT_SOURCE_DIR}/loaders/jp2ksettings.cpp
+        #${CMAKE_CURRENT_SOURCE_DIR}/loaders/jp2ksettings.cpp
     )
 
 endif()
@@ -227,7 +227,7 @@ if(X265_FOUND)
 
     set(libdimgloaders_SRCS
         ${libdimgloaders_SRCS}
-        ${CMAKE_CURRENT_SOURCE_DIR}/loaders/heifsettings.cpp
+        #${CMAKE_CURRENT_SOURCE_DIR}/loaders/heifsettings.cpp
     )
 
 endif()
@@ -236,10 +236,6 @@ include_directories(
     $<TARGET_PROPERTY:Qt5::Concurrent,INTERFACE_INCLUDE_DIRECTORIES>
     $<TARGET_PROPERTY:Qt5::Core,INTERFACE_INCLUDE_DIRECTORIES>
     $<TARGET_PROPERTY:Qt5::Xml,INTERFACE_INCLUDE_DIRECTORIES>
-
-    $<TARGET_PROPERTY:KF5::ConfigCore,INTERFACE_INCLUDE_DIRECTORIES>
-    $<TARGET_PROPERTY:KF5::I18n,INTERFACE_INCLUDE_DIRECTORIES>
-    $<TARGET_PROPERTY:KF5::WidgetsAddons,INTERFACE_INCLUDE_DIRECTORIES>
 )
 
 if(X11_FOUND)

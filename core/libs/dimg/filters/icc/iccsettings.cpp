@@ -28,9 +28,8 @@
 
 // Qt includes
 
-#include <QApplication>
+#include <QGuiApplication>
 #include <QScreen>
-#include <QWidget>
 #include <QWindow>
 #include <QDir>
 #include <QFileInfo>
@@ -83,7 +82,7 @@ public:
     QList<IccProfile>    scanDirectories(const QStringList& dirs);
     void                 scanDirectory(const QString& path, const QStringList& filter, QList<IccProfile>* const profiles);
 
-    IccProfile           profileFromWindowSystem(QWidget* const widget);
+    IccProfile           profileFromWindowSystem(QWindow* const widget);
 
     ICCSettingsContainer readFromConfig()               const;
     void                 writeToConfig()                const;
@@ -141,7 +140,7 @@ ICCSettingsContainer IccSettings::settings()
     return s;
 }
 
-IccProfile IccSettings::monitorProfile(QWidget* const widget)
+IccProfile IccSettings::monitorProfile(QWindow* const widget)
 {
     // system-wide profile set?
 
@@ -182,9 +181,9 @@ bool IccSettings::monitorProfileFromSystem() const
 
     // Second, check all toplevel widgets
 
-    QList<QWidget*> topLevels = qApp->topLevelWidgets();
+    QList<QWindow*> topLevels = qApp->topLevelWindows();
 
-    foreach (QWidget* const widget, topLevels)
+    foreach (QWindow* const widget, topLevels)
     {
         if (!d->profileFromWindowSystem(widget).isNull())
         {
@@ -203,7 +202,7 @@ bool IccSettings::monitorProfileFromSystem() const
  * Copyright (C) 2007 Thomas Zander <zander at kde dot org>
  * Copyright (C) 2007 Adrian Page <adrian at pagenet dot plus dot com>
 */
-IccProfile IccSettings::Private::profileFromWindowSystem(QWidget* const widget)
+IccProfile IccSettings::Private::profileFromWindowSystem(QWindow* const widget)
 {
 
 #ifdef HAVE_X11
@@ -229,8 +228,9 @@ IccProfile IccSettings::Private::profileFromWindowSystem(QWidget* const widget)
 
     if (widget)
     {
-        QWindow* winHandle = widget->windowHandle();
+        QWindow* winHandle = widget;
 
+        /*
         if (!winHandle)
         {
             if (QWidget* const nativeParent = widget->nativeParentWidget())
@@ -238,6 +238,7 @@ IccProfile IccSettings::Private::profileFromWindowSystem(QWidget* const widget)
                 winHandle = nativeParent->windowHandle();
             }
         }
+        */
 
         if (winHandle)
         {

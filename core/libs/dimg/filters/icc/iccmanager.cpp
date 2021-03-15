@@ -339,7 +339,7 @@ void IccManager::transformForDisplay()
     transformForDisplay(displayProfile());
 }
 
-void IccManager::transformForDisplay(QWidget* widget)
+void IccManager::transformForDisplay(QWindow* widget)
 {
     transformForDisplay(displayProfile(widget));
 }
@@ -380,7 +380,7 @@ void IccManager::transformForDisplay(const IccProfile& profile)
     }
 }
 
-IccProfile IccManager::displayProfile(QWidget* const displayingWidget)
+IccProfile IccManager::displayProfile(QWindow* const displayingWidget)
 {
     if (!IccSettings::instance()->isEnabled())
     {
@@ -397,7 +397,7 @@ IccProfile IccManager::displayProfile(QWidget* const displayingWidget)
     return IccProfile::sRGB();
 }
 
-IccTransform IccManager::displayTransform(QWidget* const displayingWidget)
+IccTransform IccManager::displayTransform(QWindow* const displayingWidget)
 {
     return displayTransform(displayProfile(displayingWidget));
 }
@@ -458,7 +458,7 @@ IccTransform IccManager::displayTransform(const IccProfile& displayProfile)
     return trans;
 }
 
-IccTransform IccManager::displaySoftProofingTransform(const IccProfile& deviceProfile, QWidget* const displayingWidget)
+IccTransform IccManager::displaySoftProofingTransform(const IccProfile& deviceProfile, QWindow* const displayingWidget)
 {
     return displaySoftProofingTransform(deviceProfile, displayProfile(displayingWidget));
 }

@@ -26,7 +26,6 @@
 // Qt includes
 
 #include <QByteArray>
-#include <QWidget>
 
 // Local includes
 

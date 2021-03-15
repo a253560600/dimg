@@ -178,7 +178,7 @@ set(librawengine_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/drawdecoder.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/drawdecoder_p.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/drawdecodersettings.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/drawdecoderwidget.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/drawdecoderwidget.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/drawinfo.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/drawfiles.cpp
 )
@@ -186,10 +186,6 @@ set(librawengine_SRCS
 include_directories(
     $<TARGET_PROPERTY:Qt5::Gui,INTERFACE_INCLUDE_DIRECTORIES>
     $<TARGET_PROPERTY:Qt5::Core,INTERFACE_INCLUDE_DIRECTORIES>
-    $<TARGET_PROPERTY:Qt5::Widgets,INTERFACE_INCLUDE_DIRECTORIES>
-
-    $<TARGET_PROPERTY:KF5::ConfigCore,INTERFACE_INCLUDE_DIRECTORIES>
-    $<TARGET_PROPERTY:KF5::I18n,INTERFACE_INCLUDE_DIRECTORIES>
 )
 
 # Used by digikamcore

@@ -8,31 +8,31 @@
 APPLY_COMMON_POLICIES()
 
 set(libthreadimageio_SRCS
-    ${CMAKE_CURRENT_SOURCE_DIR}/engine/dservicemenu.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/engine/dfileoperations.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/engine/dservicemenu.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/engine/dfileoperations.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/engine/filereadwritelock.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/engine/managedloadsavethread.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/engine/sharedloadsavethread.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/engine/managedloadsavethread.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/engine/sharedloadsavethread.cpp
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/preview/previewloadthread.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/preview/previewtask.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/preview/previewsettings.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/preview/previewloadthread.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/preview/previewtask.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/preview/previewsettings.cpp
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/thumb/thumbnailcreator.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/thumb/thumbnailcreator_basic.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/thumb/thumbnailcreator_freedesktop.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/thumb/thumbnailcreator_database.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/thumb/thumbnailcreator_engine.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/thumb/thumbnailloadthread.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/thumb/thumbnailloadthread_p.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/thumb/thumbnailtask.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/thumb/thumbnailsize.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/thumb/thumbnailcreator.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/thumb/thumbnailcreator_basic.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/thumb/thumbnailcreator_freedesktop.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/thumb/thumbnailcreator_database.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/thumb/thumbnailcreator_engine.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/thumb/thumbnailloadthread.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/thumb/thumbnailloadthread_p.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/thumb/thumbnailtask.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/thumb/thumbnailsize.cpp
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/fileio/loadsavethread.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/fileio/loadingdescription.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/fileio/loadingcache.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/fileio/loadingcacheinterface.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/fileio/loadsavetask.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/fileio/loadsavethread.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/fileio/loadingdescription.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/fileio/loadingcache.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/fileio/loadingcacheinterface.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/fileio/loadsavetask.cpp
 )
 
 if(ENABLE_MEDIAPLAYER)
@@ -49,14 +49,8 @@ if(ENABLE_MEDIAPLAYER)
 endif()
 
 include_directories(
-    $<TARGET_PROPERTY:Qt5::Sql,INTERFACE_INCLUDE_DIRECTORIES>
     $<TARGET_PROPERTY:Qt5::Gui,INTERFACE_INCLUDE_DIRECTORIES>
-    $<TARGET_PROPERTY:Qt5::Widgets,INTERFACE_INCLUDE_DIRECTORIES>
     $<TARGET_PROPERTY:Qt5::Core,INTERFACE_INCLUDE_DIRECTORIES>
-
-    $<TARGET_PROPERTY:KF5::I18n,INTERFACE_INCLUDE_DIRECTORIES>
-    $<TARGET_PROPERTY:KF5::ConfigCore,INTERFACE_INCLUDE_DIRECTORIES>
-    $<TARGET_PROPERTY:KF5::Service,INTERFACE_INCLUDE_DIRECTORIES>
 )
 
 if(ENABLE_DBUS)

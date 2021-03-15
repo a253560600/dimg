@@ -28,8 +28,6 @@
 
 #include "dplugin.h"
 #include "dimg.h"
-#include "loadingdescription.h"
-#include "dpluginloader.h"
 #include "digikam_export.h"
 
 namespace Digikam
@@ -86,12 +84,12 @@ Q_SIGNALS:
     /**
      * Signal to emit to notify host application to load Raw with these decoding settings.
      */
-    void signalLoadRaw(const Digikam::LoadingDescription&);
+    //TODO void signalLoadRaw(const Digikam::LoadingDescription&);
 
     /**
      * Signal to emit to notify host application to load pre-decoded Raw preprocessed with these decoding settings.
      */
-    void signalDecodedImage(const Digikam::LoadingDescription&, const Digikam::DImg&);
+    //TODO void signalDecodedImage(const Digikam::LoadingDescription&, const Digikam::DImg&);
 };
 
 } // namespace Digikam

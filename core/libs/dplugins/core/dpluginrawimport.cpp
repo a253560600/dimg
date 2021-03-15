@@ -23,10 +23,6 @@
 
 #include "dpluginrawimport.h"
 
-// Qt includes
-
-#include <QApplication>
-
 // Local includes
 
 #include "digikam_version.h"

@@ -28,11 +28,12 @@
 #include <QMutex>
 #include <QMutexLocker>
 #include <QWaitCondition>
+#include <QThreadPool>
 
 // Local includes
 
 #include "digikam_debug.h"
-#include "threadmanager.h"
+//#include "threadmanager.h"
 
 namespace Digikam
 {
@@ -211,7 +212,7 @@ DynamicThread::DynamicThread(QObject* const parent)
     : QObject(parent),
       d      (new Private(this))
 {
-    ThreadManager::instance()->initialize(this);
+    //ThreadManager::instance()->initialize(this);
 }
 
 DynamicThread::~DynamicThread()
@@ -327,7 +328,7 @@ void DynamicThread::start(QMutexLocker& locker)
         d->threadRequested = true;
 
         locker.unlock();
-        ThreadManager::instance()->schedule(d);
+        QThreadPool::globalInstance()->start(d);//ThreadManager::instance()->schedule(d);
         locker.relock();
     }
 }

@@ -27,10 +27,6 @@
 
 #include <cmath>
 
-// Qt includes
-
-#include <QListWidget>
-
 // KDE includes
 
 #include <klocalizedstring.h>
@@ -323,19 +319,6 @@ CBContainer FilmContainer::toCB() const
     cb.gamma = 1.0;
 
     return cb;
-}
-
-QList<FilmContainer::ListItem*> FilmContainer::profileItemList(QListWidget* view)
-{
-    QList<FilmContainer::ListItem*> itemList;
-    QMap<int, QString>::ConstIterator it;
-
-    for (it = profileMap.constBegin() ; it != profileMap.constEnd() ; ++it)
-    {
-        itemList << new ListItem(it.value(), view, (CNFilmProfile)it.key());
-    }
-
-    return itemList;
 }
 
 QMap<int, QString> FilmContainer::profileMapInitializer()

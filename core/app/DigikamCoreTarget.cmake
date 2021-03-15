@@ -10,84 +10,18 @@
 set(DIGIKAMCORE_OBJECTS
 
             ${CMAKE_CURRENT_SOURCE_DIR}/utils/digikam_debug.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/utils/digikam_version.cpp
 
             $<TARGET_OBJECTS:core_dimg_obj>
-            $<TARGET_OBJECTS:core_dragdrop_obj>
             $<TARGET_OBJECTS:core_dmetadata_obj>
-            $<TARGET_OBJECTS:core_onlineversion_obj>
             $<TARGET_OBJECTS:core_jpegutils_obj>
-            $<TARGET_OBJECTS:core_progressmanager_obj>
             $<TARGET_OBJECTS:core_threadimageio_obj>
-            $<TARGET_OBJECTS:core_pgfutils_obj>
             $<TARGET_OBJECTS:core_dthread_obj>
-            $<TARGET_OBJECTS:core_versionmanager_obj>
-            $<TARGET_OBJECTS:core_kmemoryinfo_obj>
             $<TARGET_OBJECTS:core_libraw_obj>
             $<TARGET_OBJECTS:core_rawengine_obj>
             $<TARGET_OBJECTS:core_dpluginsinterface_obj>
-            $<TARGET_OBJECTS:core_libwso2_obj>
             $<TARGET_OBJECTS:core_libheif_obj>
             $<TARGET_OBJECTS:core_libde265_obj>
-
-            $<TARGET_OBJECTS:core_libmd5_obj>
-            $<TARGET_OBJECTS:core_libxmp_obj>
-            $<TARGET_OBJECTS:core_libdng_obj>
-            $<TARGET_OBJECTS:core_dngwriter_obj>
-
-            # widgets
-            $<TARGET_OBJECTS:core_digikamwidgets_obj>
-            $<TARGET_OBJECTS:core_digikamdialogs_obj>
-            $<TARGET_OBJECTS:core_itemproperties_obj>
-            $<TARGET_OBJECTS:core_digikamgenericmodels_obj>
-            $<TARGET_OBJECTS:core_notificationmanager_obj>
-
-            # utilities
-            $<TARGET_OBJECTS:core_setupcommon_obj>
-            $<TARGET_OBJECTS:core_imageeditor_obj>
-            $<TARGET_OBJECTS:core_libtransitionmngr_obj>
-            $<TARGET_OBJECTS:core_timeadjust_obj>
-
-            $<TARGET_OBJECTS:core_digikamdatabase_obj>
-            $<TARGET_OBJECTS:core_digikamfacesengine_obj>
 )
-
-if(ENABLE_MEDIAPLAYER)
-
-    set(DIGIKAMCORE_OBJECTS
-        ${DIGIKAMCORE_OBJECTS}
-        $<TARGET_OBJECTS:core_videotools_obj>
-    )
-
-endif()
-
-if(Marble_FOUND)
-
-    set(DIGIKAMCORE_OBJECTS
-        ${DIGIKAMCORE_OBJECTS}
-        $<TARGET_OBJECTS:core_geoiface_obj>
-        $<TARGET_OBJECTS:core_geomapwrapper_obj>
-    )
-
-endif()
-
-if(KF5FileMetaData_FOUND)
-
-    set(DIGIKAMCORE_OBJECTS
-        ${DIGIKAMCORE_OBJECTS}
-        $<TARGET_OBJECTS:core_baloowrap_obj>
-    )
-
-endif()
-
-if(KF5AkonadiContact_FOUND)
-
-    set(DIGIKAMCORE_OBJECTS
-        ${DIGIKAMCORE_OBJECTS}
-        $<TARGET_OBJECTS:core_akonadiiface_obj>
-    )
-
-endif()
 
 add_library(digikamcore
             SHARED
@@ -104,9 +38,6 @@ target_compile_definitions(digikamcore
                            digikamcore_EXPORTS
 )
 
-add_dependencies(digikamcore digikam-gitversion)
-add_dependencies(digikamcore digikam-builddate)
-
 # All codes from this target are exported with digikam_core_export.h header and DIGIKAM_EXPORT macro.
 generate_export_header(digikamcore
                        BASE_NAME digikam
@@ -122,17 +53,7 @@ target_link_libraries(digikamcore
                       Qt5::Core
                       Qt5::Gui
                       Qt5::Xml
-                      Qt5::Widgets
-                      Qt5::Sql
-                      Qt5::PrintSupport
                       Qt5::Concurrent
-
-                      KF5::Solid
-                      KF5::WindowSystem
-                      KF5::ConfigGui
-                      KF5::XmlGui
-                      KF5::I18n
-                      KF5::Service
 
                       # Required by CImg which use pthread internally.
 
@@ -158,77 +79,6 @@ target_link_libraries(digikamcore
                       opencv_ml
                       opencv_flann
 )
-
-if(ENABLE_QWEBENGINE)
-
-    target_link_libraries(digikamcore
-                          PRIVATE
-                          Qt5::WebEngineWidgets
-    )
-
-else()
-
-    target_link_libraries(digikamcore
-                          PRIVATE
-                          Qt5::WebKitWidgets
-    )
-
-endif()
-
-if(ENABLE_DBUS)
-
-    target_link_libraries(digikamcore
-                          PRIVATE
-                          Qt5::DBus
-    )
-
-endif()
-
-if(KF5IconThemes_FOUND)
-
-    target_link_libraries(digikamcore
-                          PRIVATE
-                          KF5::IconThemes
-    )
-
-endif()
-
-if(KF5KIO_FOUND)
-
-    target_link_libraries(digikamcore
-                          PRIVATE
-                          KF5::KIOCore
-                          KF5::KIOWidgets
-    )
-
-endif()
-
-if(KF5Notifications_FOUND)
-
-    target_link_libraries(digikamcore
-                          PRIVATE
-                          KF5::Notifications
-    )
-
-endif()
-
-if(KF5NotifyConfig_FOUND)
-
-    target_link_libraries(digikamcore
-                          PRIVATE
-                          KF5::NotifyConfig
-    )
-
-endif()
-
-if(Marble_FOUND)
-
-    target_link_libraries(digikamcore
-                          PRIVATE
-                          ${MARBLE_LIBRARIES}
-    )
-
-endif()
 
 if(X11_FOUND)
 
@@ -296,24 +146,6 @@ if(OpenCV_FOUND)
 
 endif()
 
-if(KF5FileMetaData_FOUND)
-
-    target_link_libraries(digikamcore
-                          PRIVATE
-                          KF5::FileMetaData
-    )
-
-endif()
-
-if(KF5AkonadiContact_FOUND)
-
-    target_link_libraries(digikamcore
-                          PRIVATE
-                          KF5::AkonadiContact
-    )
-
-endif()
-
 if(APPLE)
 
     target_link_libraries(digikamcore
@@ -340,29 +172,4 @@ if(CMAKE_SYSTEM_NAME STREQUAL FreeBSD)
                           ${KVM_LIBRARY}
     )
 
-endif()
-
-if(ENABLE_MEDIAPLAYER)
-
-    target_link_libraries(digikamcore
-                          PRIVATE
-                          ${QTAV_LIBRARIES}
-    )
-
-endif()
-
-### Install Rules ###############################################################################################################
-
-install(TARGETS digikamcore EXPORT DigikamCoreConfig ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(EXPORT DigikamCoreConfig DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/DigikamCore" NAMESPACE Digikam::)
-
-write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/DigikamCoreConfigVersion.cmake
-                                 VERSION ${DIGIKAM_VERSION_SHORT}
-                                 COMPATIBILITY SameMajorVersion)
-
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/DigikamCoreConfigVersion.cmake
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/DigikamCore")
-
-if(APPLE)
-    install(FILES "$<TARGET_FILE:digikamcore>.dSYM" DESTINATION "${CMAKE_INSTALL_LIBDIR}" CONFIGURATIONS Debug RelWithDebInfo)
 endif()

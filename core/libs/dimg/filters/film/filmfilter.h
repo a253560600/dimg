@@ -27,8 +27,6 @@
 // Qt includes
 
 #include <QString>
-#include <QList>
-#include <QListWidgetItem>
 #include <QSharedPointer>
 
 // Local includes
@@ -81,22 +79,6 @@ public:
 
 public:
 
-    class ListItem : public QListWidgetItem
-    {
-    public:
-
-        explicit ListItem(const QString& text, QListWidget* const parent, CNFilmProfile type)
-            : QListWidgetItem(text, parent, type + QListWidgetItem::UserType)
-        {
-        }
-
-    private:
-
-        Q_DISABLE_COPY(ListItem)
-    };
-
-public:
-
     explicit FilmContainer();
     explicit FilmContainer(CNFilmProfile profile, double gamma, bool sixteenBit);
 
@@ -122,7 +104,6 @@ public:
 public:
 
     static const QMap<int, QString> profileMap;
-    static QList<ListItem*> profileItemList(QListWidget* const view);
 
 private:
 

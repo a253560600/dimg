@@ -35,10 +35,7 @@
 
 #include "digikam_export.h"
 
-class QWidget;
 class QObject;
-class QShortcut;
-class QKeySequence;
 
 /**
  * Macros for image filters.
@@ -151,11 +148,6 @@ enum ChannelType
 };
 
 // --------------------------------------------------------
-
-/**
- * Convenience method for creating keyboard shortcuts.
- */
-DIGIKAM_EXPORT QShortcut* defineShortcut(QWidget* const w, const QKeySequence& key, const QObject* receiver, const char* slot);
 
 /**
  * Return list of supported image formats by Qt for reading or writing operations if suitable
