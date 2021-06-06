@@ -50,6 +50,8 @@ include(FeatureSummary)
 
 include(MacroBoolTo01)
 
+include(DNGSdkRules)
+
 macro(HEADER_DIRECTORIES return_list)
 
     file(GLOB_RECURSE new_list *.h)
