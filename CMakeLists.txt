@@ -344,7 +344,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/app/utils/digikam_opencv.h.cmake
     # ==========================================================================
     # Includes rules
 
-    include_directories(shims)
+    add_subdirectory(shims)
 
     # Recursively get all directories which contain header files
     set(DK_INCLUDES_ALL "")
