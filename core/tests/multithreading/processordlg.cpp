@@ -36,14 +36,14 @@
 #include <QFileInfo>
 #include <QDialogButtonBox>
 #include <QPushButton>
-#include <QDebug>
 #include <QHBoxLayout>
 #include <QScrollArea>
 #include <QSpinBox>
 
 // Local includes
 
-#include "myactionthread.h"
+#include "digikam_debug.h"
+#include "rawtopngconverterthread.h"
 
 class Q_DECL_HIDDEN ProcessorDlg::Private
 {
@@ -60,31 +60,31 @@ public:
     {
     }
 
-    int                  count;
+    int                      count;
 
-    QWidget*             page;
-    QLabel*              items;
-    QDialogButtonBox*    buttons;
-    QScrollArea*         progressView;
+    QWidget*                 page;
+    QLabel*                  items;
+    QDialogButtonBox*        buttons;
+    QScrollArea*             progressView;
 
-    QList<QUrl>          list;
+    QList<QUrl>              list;
 
-    QSpinBox*            usedCore;
-    MyActionThread*      thread;
+    QSpinBox*                usedCore;
+    RAWToPNGConverterThread* thread;
 };
 
 ProcessorDlg::ProcessorDlg(const QList<QUrl>& list, QWidget* const parent)
     : QDialog(parent),
-      d(new Private)
+      d      (new Private)
 {
     setModal(false);
     setWindowTitle(QString::fromUtf8("Convert RAW files To PNG"));
 
     d->buttons               = new QDialogButtonBox(QDialogButtonBox::Apply | QDialogButtonBox::Close, this);
-    d->thread                = new MyActionThread(this);
+    d->thread                = new RAWToPNGConverterThread(this);
     d->list                  = list;
     d->count                 = d->list.count();
-    qDebug() << d->list;
+    qCDebug(DIGIKAM_TESTS_LOG) << d->list;
 
     d->page                  = new QWidget(this);
     QVBoxLayout* const vbx   = new QVBoxLayout(this);
@@ -201,13 +201,13 @@ QProgressBar* ProcessorDlg::findProgressBar(const QUrl& url) const
         }
     }
 
-    qWarning() << "Cannot found relevant progress bar for " << url.toLocalFile();
+    qCWarning(DIGIKAM_TESTS_LOG) << "Cannot found relevant progress bar for " << url.toLocalFile();
     return nullptr;
 }
 
 void ProcessorDlg::slotStarting(const QUrl& url)
 {
-    qDebug() << "Start to process item " << url.toLocalFile();
+    qCDebug(DIGIKAM_TESTS_LOG) << "Start to process item " << url.toLocalFile();
 
     QProgressBar* const b = findProgressBar(url);
 
@@ -222,7 +222,7 @@ void ProcessorDlg::slotStarting(const QUrl& url)
 
 void ProcessorDlg::slotProgress(const QUrl& url,int p)
 {
-    qDebug() << "Processing item " << url.toLocalFile() << " : " << p << " %";;
+    qCDebug(DIGIKAM_TESTS_LOG) << "Processing item " << url.toLocalFile() << " : " << p << " %";;
 
     QProgressBar* const b = findProgressBar(url);
 
@@ -236,7 +236,7 @@ void ProcessorDlg::slotProgress(const QUrl& url,int p)
 
 void ProcessorDlg::slotFinished(const QUrl& url)
 {
-    qDebug() << "Completed item " << url.toLocalFile();
+    qCDebug(DIGIKAM_TESTS_LOG) << "Completed item " << url.toLocalFile();
 
     QProgressBar* const b = findProgressBar(url);
 
@@ -253,7 +253,7 @@ void ProcessorDlg::slotFinished(const QUrl& url)
 
 void ProcessorDlg::slotFailed(const QUrl& url, const QString& err)
 {
-    qDebug() << "Failed to complete item " << url.toLocalFile();
+    qCDebug(DIGIKAM_TESTS_LOG) << "Failed to complete item " << url.toLocalFile();
 
     QProgressBar* const b = findProgressBar(url);
 

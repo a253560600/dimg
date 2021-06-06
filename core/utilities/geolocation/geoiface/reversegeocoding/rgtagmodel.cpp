@@ -73,6 +73,10 @@ public:
     QList<QPersistentModelIndex> auxIndexList;
 
     QList<QList<TagData> >       savedSpacerList;
+
+    QString                      textState;
+    QString                      textLau1;
+    QString                      textLau2;
 };
 
 /**
@@ -88,14 +92,21 @@ RGTagModel::RGTagModel(QAbstractItemModel* const externalTagModel, QObject* cons
     d->rootTag       = new TreeBranch();
     d->rootTag->type = TypeChild;
 
-    i18n("{Country}");
-    i18nc("Part of a country", "{State}");
-    i18n("{County}");
-    i18n("{City}");
-    i18n("{Town}");
-    i18n("{Village}");
-    i18n("{Hamlet}");
-    i18n("{Street}");
+                   i18n("{Country}");
+    d->textState = i18nc("Part of a country", "{State}");
+                   i18n("{State district}");
+                   i18n("{County}");
+                   i18n("{City}");
+                   i18n("{City district}");
+                   i18n("{Suburb}");
+                   i18n("{Town}");
+                   i18n("{Village}");
+                   i18n("{Hamlet}");
+                   i18n("{Street}");
+                   i18n("{House number}");
+                   i18n("{Place}");
+    d->textLau1  = i18nc("Local administrative area 1", "{LAU1}");
+    d->textLau2  = i18nc("Local administrative area 2", "{LAU2}");
 
     connect(d->tagModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
             this, SLOT(slotSourceDataChanged(QModelIndex,QModelIndex)));
@@ -562,7 +573,7 @@ QVariant RGTagModel::data(const QModelIndex& index, int role) const
     }
     else if ((treeBranch->type == TypeSpacer) && (role == Qt::DisplayRole))
     {
-        return i18n(treeBranch->data.toUtf8().constData());
+        return translateSpacer(treeBranch->data);
     }
     else if ((treeBranch->type == TypeSpacer) && (role == Qt::ForegroundRole))
     {
@@ -578,7 +589,7 @@ QVariant RGTagModel::data(const QModelIndex& index, int role) const
     }
     else if ((treeBranch->type == TypeNewChild) && (role == Qt::ToolTipRole))
     {
-        return i18n(treeBranch->help.toUtf8().constData());
+        return translateSpacer(treeBranch->help);
     }
 
     return QVariant();
@@ -1298,6 +1309,24 @@ Type RGTagModel::getTagType(const QModelIndex& index) const
     const TreeBranch* const treeBranch = branchFromIndex(index);
 
     return treeBranch->type;
+}
+
+QString RGTagModel::translateSpacer(const QString& text) const
+{
+    if      (text == QLatin1String("{State}"))
+    {
+        return d->textState;
+    }
+    else if (text == QLatin1String("{LAU1}"))
+    {
+        return d->textLau1;
+    }
+    else if (text == QLatin1String("{LAU2}"))
+    {
+        return d->textLau2;
+    }
+
+    return i18n(text.toUtf8().constData());
 }
 
 } // namespace Digikam

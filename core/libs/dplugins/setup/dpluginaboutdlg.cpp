@@ -96,7 +96,10 @@ DPluginAboutDlg::DPluginAboutDlg(DPlugin* const tool, QWidget* const parent)
     QTextBrowser* const details     = new QTextBrowser(tab);
     details->setOpenExternalLinks(true);
     details->setFocusPolicy(Qt::NoFocus);
-    details->setText(tool->details());
+
+    QString txtDetails = tool->details();
+    txtDetails.replace(QLatin1String("\n"), QLatin1String("<br>"));
+    details->setText(txtDetails);
 
     tab->addTab(details, i18nc("@title", "Details"));
 
@@ -145,7 +148,8 @@ DPluginAboutDlg::DPluginAboutDlg(DPlugin* const tool, QWidget* const parent)
 
     new QTreeWidgetItem(props, QStringList() << i18nc("@item", "File Size")    << ItemPropertiesTab::humanReadableBytesCount(fi.size()));
     new QTreeWidgetItem(props, QStringList() << i18nc("@item", "File Date")    << QLocale().toString(fi.lastModified(), QLocale::ShortFormat));
-
+    new QTreeWidgetItem(props, QStringList() << i18nc("@item", "File Owner")   << fi.owner());
+    new QTreeWidgetItem(props, QStringList() << i18nc("@item", "File Group")   << fi.group());
 
     tab->addTab(props, i18nc("@title", "Properties"));
 

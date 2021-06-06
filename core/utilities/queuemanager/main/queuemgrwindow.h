@@ -80,6 +80,7 @@ public:
 
     DInfoInterface* infoIface(DPluginAction* const)     override
     {
+        // Reimplemented in BatchToolsFactory
         return nullptr;
     };
 
@@ -140,7 +141,9 @@ private Q_SLOTS:
 private:
 
     // Disable
-    QueueMgrWindow(QWidget*);
+    QueueMgrWindow(QWidget*) = delete;
+
+private:
 
     class Private;
     Private* const d;

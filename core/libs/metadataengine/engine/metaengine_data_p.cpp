@@ -43,17 +43,20 @@ void MetaEngineData::Private::clear()
         iptcMetadata.clear();
 
 #ifdef _XMP_SUPPORT_
+
         xmpMetadata.clear();
+
 #endif
 
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        qCCritical(DIGIKAM_METAENGINE_LOG) << "Cannot clear data container using Exiv2"
-                                           << " (Error #" << e.code() << ": "
-                                           << QString::fromStdString(e.what());
+        qCCritical(DIGIKAM_METAENGINE_LOG) << "Cannot clear data container with Exiv2 "
+                                           << "(Error #" << e.code() << ": "
+                                           << QString::fromStdString(e.what())
+                                           << ")";
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }

@@ -58,8 +58,8 @@ class DIGIKAM_EXPORT DSelector : public QAbstractSlider
 
 public:
 
-    explicit DSelector(QWidget *parent=nullptr);
-    explicit DSelector(Qt::Orientation o, QWidget* const parent=nullptr);
+    explicit DSelector(QWidget *parent = nullptr);
+    explicit DSelector(Qt::Orientation o, QWidget* const parent = nullptr);
     ~DSelector() override;
 
     /**
@@ -224,7 +224,7 @@ private:
 
     class Private;
     friend class Private;
-    Private *const d;
+    Private* const d;
 
     Q_DISABLE_COPY(DColorValueSelector)
 };

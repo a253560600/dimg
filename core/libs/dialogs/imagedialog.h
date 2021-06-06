@@ -48,7 +48,7 @@ class DIGIKAM_EXPORT ImageDialogPreview : public QScrollArea
 
 public:
 
-    explicit ImageDialogPreview(QWidget* const parent=nullptr);
+    explicit ImageDialogPreview(QWidget* const parent = nullptr);
     ~ImageDialogPreview() override;
 
     QSize sizeHint() const override;
@@ -114,9 +114,11 @@ public:
 
 private:
 
-    // Hidden copy constructor and assignment operator.
-    ImageDialog(const ImageDialog&);
-    ImageDialog& operator=(const ImageDialog&);
+    // Disable
+    ImageDialog(const ImageDialog&)            = delete;
+    ImageDialog& operator=(const ImageDialog&) = delete;
+
+private:
 
     class Private;
     Private* const d;

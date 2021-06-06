@@ -19,19 +19,16 @@ ENDIF()
 ExternalProject_Add(ext_qt
     DOWNLOAD_DIR ${EXTERNALS_DOWNLOAD_DIR}
 
-    URL https://download.qt.io/official_releases/qt/5.15/5.15.0/single/qt-everywhere-src-5.15.0.tar.xz
-    URL_MD5 610a228dba6ef469d14d145b71ab3b88
+    URL https://download.qt.io/official_releases/qt/5.15/5.15.2/single/qt-everywhere-src-5.15.2.tar.xz
+    URL_MD5 e1447db4f06c841d8947f0a6ce83a7b5
 
-    CMAKE_ARGS -DOPENSSL_LIBS='-L${EXTPREFIX_qt}/lib -lssl -lcrypto -lpthread -ldl'
+#                  ICU_LIBS="-I${EXTPREFIX}/local/ -L${EXTPREFIX}/local/lib -licui18n -licuuc -licudata"
 
 
     PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/qt-appimage-support.patch
-
-#    PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/qt-icu-hack.patch &&
-#                  ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/qt-appimage-support.patch
+#               && ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/qt-icu-hack.patch
 
     CONFIGURE_COMMAND <SOURCE_DIR>/configure
-                  ICU_LIBS="-I${EXTPREFIX}/local/ -L${EXTPREFIX}/local/lib -licui18n -licuuc -licudata"
                   -prefix ${EXTPREFIX_qt}
                   -verbose
                   -release
@@ -42,7 +39,7 @@ ExternalProject_Add(ext_qt
                   -iconv                            # International string conversion
                   -fontconfig
                   -system-freetype                  # Use system font rendering lib https://doc.qt.io/qt-5/qtgui-attribution-freetype.html
-                  -openssl-linked                   # hard link ssl libraries
+                  -openssl-linked                   # hard link to static version of ssl libraries
                   -nomake tests                     # Do not build test codes
                   -nomake examples                  # Do not build basis example codes
                   -no-compile-examples              # Do not build extra example codes
@@ -82,13 +79,15 @@ ExternalProject_Add(ext_qt
                   -skip qtserialbus                 # No need serial bus support
                   -skip qtserialport                # No need serial port support
                   -skip qtspeech                    # No need speech synthesis support
-                  -skip qttranslations              # No need translation tools.
                   -skip qtvirtualkeyboard           # No need virtual keyboard support
                   -skip qtwebglplugin               # No need browser OpenGL extention support
                   -skip qtwebsockets                # No need websocket support
                   -skip qtwebview                   # QML extension for QWebEngine
                   -skip qtwinextras                 # For Windows devices only
                   ${DROP_QTWEBENGINE_DEPS}
+                  OPENSSL_INCDIR="/opt/openssl/include/"
+                  OPENSSL_LIBDIR="/opt/openssl/lib/"
+                  OPENSSL_LIBS="-lssl -lcrypto"
 
     # Exemple of code to install only one Qt module for hacking purpose (aka qtbase here)
     #BUILD_COMMAND cd <SOURCE_DIR> && $(MAKE) module-qtbase

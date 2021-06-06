@@ -76,6 +76,7 @@ Q_SIGNALS:
 
 public Q_SLOTS:
 
+    void slotRemoveImageFromList();
     void slotLoadNextItem();
     void slotLoadPrevItem();
     void slotPause();
@@ -118,7 +119,9 @@ private:
 private:
 
     // Disable
-    explicit SlideShowLoader(QWidget*);
+    explicit SlideShowLoader(QWidget*) = delete;
+
+private:
 
     class Private;
     Private* const d;

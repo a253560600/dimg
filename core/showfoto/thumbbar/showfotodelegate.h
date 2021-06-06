@@ -31,7 +31,7 @@
 
 // Local includes
 
-#include "itemviewshowfotodelegate.h"
+#include "showfotoitemviewdelegate.h"
 #include "showfotothumbnailmodel.h"
 
 namespace ShowFoto
@@ -42,7 +42,7 @@ class ShowfotoThumbnailDelegatePrivate;
 class ShowfotoNormalDelegatePrivate;
 class ShowfotoFilterModel;
 
-class ShowfotoDelegate : public ItemViewShowfotoDelegate
+class ShowfotoDelegate : public ShowfotoItemViewDelegate
 {
     Q_OBJECT
 
@@ -62,9 +62,9 @@ public:
     void setSpacing(int spacing)                                                                       override;
     void setDefaultViewOptions(const QStyleOptionViewItem& option)                                     override;
     bool acceptsToolTip(const QPoint& pos, const QRect& visualRect,
-                                const QModelIndex& index, QRect* tooltipRect = nullptr)                  const override;
+                        const QModelIndex& index, QRect* tooltipRect = nullptr)                  const override;
     bool acceptsActivation(const QPoint& pos, const QRect& visualRect,
-                                   const QModelIndex& index, QRect* activationRect = nullptr)            const override;
+                           const QModelIndex& index, QRect* activationRect = nullptr)            const override;
 
     QRect pixmapRect()                                                                           const override;
     QRect imageInformationRect()                                                                 const override;
@@ -161,7 +161,9 @@ protected:
 private:
 
     // Disable
-    explicit ShowfotoThumbnailDelegate(QObject*);
+    explicit ShowfotoThumbnailDelegate(QObject*) = delete;
+
+private:
 
     Q_DECLARE_PRIVATE(ShowfotoThumbnailDelegate)
 };

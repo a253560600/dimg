@@ -47,13 +47,18 @@ namespace DigikamBqmAutoCorrectionPlugin
 {
 
 AutoCorrection::AutoCorrection(QObject* const parent)
-    : BatchTool(QLatin1String("AutoCorrection"), ColorTool, parent)
+    : BatchTool(QLatin1String("AutoCorrection"), ColorTool, parent),
+      m_comboBox(nullptr)
 {
-    m_comboBox = nullptr;
 }
 
 AutoCorrection::~AutoCorrection()
 {
+}
+
+BatchTool* AutoCorrection::clone(QObject* const parent) const
+{
+    return new AutoCorrection(parent);
 }
 
 void AutoCorrection::registerSettingsWidget()

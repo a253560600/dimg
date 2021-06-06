@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2010-2020, Gilles Caulier, <caulier dot gilles at gmail dot com>
+# Copyright (c) 2010-2021, Gilles Caulier, <caulier dot gilles at gmail dot com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
@@ -11,18 +11,18 @@ include_directories(${CMAKE_SOURCE_DIR}/core/libs/rawengine/libraw
                     $<TARGET_PROPERTY:Qt5::Gui,INTERFACE_INCLUDE_DIRECTORIES>
 )
 
-set(raw2png_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/raw2png.cpp)
-add_executable(raw2png ${raw2png_SRCS})
-target_link_libraries(raw2png
+set(raw2png_cli_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/raw2png_cli.cpp)
+add_executable(raw2png_cli ${raw2png_cli_SRCS})
+target_link_libraries(raw2png_cli
 
                       digikamcore
 
                       ${COMMON_TEST_LINK}
 )
 
-set(libinfo_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/libinfo.cpp)
-add_executable(libinfo ${libinfo_SRCS})
-target_link_libraries(libinfo
+set(librawinfo_cli_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/librawinfo_cli.cpp)
+add_executable(librawinfo_cli ${librawinfo_cli_SRCS})
+target_link_libraries(librawinfo_cli
 
                       digikamcore
 
@@ -58,11 +58,13 @@ macro(LIBRAW_BUILD_SAMPLES)
         set_source_files_properties(${${_target}_SRCS} PROPERTIES COMPILE_FLAGS "-w")
     endif()
 
-    add_executable(${_target} ${${_target}_SRCS})
+    add_executable(${_target}_cli ${${_target}_SRCS})
 
-    target_link_libraries(${_target}
+    target_link_libraries(${_target}_cli
 
                           libraw
+                          libdng
+                          PNG::PNG                          # For zlib
 
                           ${COMMON_TEST_LINK}
     )

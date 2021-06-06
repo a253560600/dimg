@@ -461,6 +461,7 @@ bool DRawDecoder::extractRAWData(const QString& filePath,
 
     raw->imgdata.params.output_bps  = 16;
     raw->imgdata.params.shot_select = shotSelect;
+    raw->imgdata.params.user_flip   = -1;
     ret                             = raw->unpack();
 
     if (ret != LIBRAW_SUCCESS)
@@ -541,9 +542,9 @@ bool DRawDecoder::extractRAWData(const QString& filePath,
 
         unsigned short* output = reinterpret_cast<unsigned short*>(rawData.data());
 
-        for (uint row = 0 ; row < raw->imgdata.sizes.iheight ; ++row)
+        for (unsigned int row = 0 ; row < raw->imgdata.sizes.iheight ; ++row)
         {
-            for (uint col = 0 ; col < raw->imgdata.sizes.iwidth ; ++col)
+            for (unsigned int col = 0 ; col < raw->imgdata.sizes.iwidth ; ++col)
             {
                 *output = raw->imgdata.image[raw->imgdata.sizes.iwidth*row + col][raw->COLOR(row, col)];
                 output++;

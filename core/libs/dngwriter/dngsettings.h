@@ -40,7 +40,7 @@ class DIGIKAM_EXPORT DNGSettings : public QWidget
 
 public:
 
-    explicit DNGSettings(QWidget* const parent=nullptr);
+    explicit DNGSettings(QWidget* const parent = nullptr);
     ~DNGSettings() override;
 
     void setCompressLossLess(bool b);
@@ -54,9 +54,15 @@ public:
 
     void setDefaultSettings();
 
+public Q_SLOTS:
+
+    /// To handle changes from host application Setup dialog.
+    void slotSetupChanged();
+
 Q_SIGNALS:
 
     void signalSettingsChanged();
+    void signalSetupExifTool();
 
 private:
 

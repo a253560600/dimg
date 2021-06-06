@@ -32,6 +32,21 @@ else
     echo "Check run as root passed..."
 fi
 
+# Check OS name and version.
+
+OS_NAME=$(awk '/DISTRIB_ID=/' /etc/*-release | sed 's/DISTRIB_ID=//' | sed 's/\"//' | sed 's/\"//' | tr '[:upper:]' '[:lower:]')
+OS_ARCH=$(uname -m | sed 's/x86_//;s/i[3-6]86/32/')
+OS_VERSION=$(awk '/DISTRIB_RELEASE=/' /etc/*-release | sed 's/DISTRIB_RELEASE=//' | sed 's/[.]0/./')
+
+echo $OS_NAME
+echo $OS_ARCH
+echo $OS_VERSION
+
+if [[ "$OS_NAME" != "mageia" ]] ; then
+    echo "Not running Linux Mageia..."
+    exit -1
+fi
+
 # Enable Tainted RPM media
 
 urpmi.update --no-ignore "Tainted Release"
@@ -40,36 +55,42 @@ urpmi.update --no-ignore "Tainted Updates"
 # Install all RPMs
 
 urpmi --auto \
-      git \
-      subversion \
-      unrar \
-      scons \
-      cmake \
-      ccache \
-      icoutils \
-      valgrind \
-      cppcheck \
-      python3-mako \
-      python3-pygments \
-      python3-beautifulsoup4 \
-      python3-soupsieve \
-      perl-Tie-IxHash \
-      perl-libxml-perl \
-      perl-JSON-XS \
-      doxygen \
-      hugin \
-      kate \
-      ktexteditor-plugins \
-      extra-cmake-modules \
-      gcc-c++ \
-      gperf \
-      ruby \
-      bison \
-      flex \
-      mingw32-nsis \
-      clang-analyzer \
-      intltool \
-      lzip \
+      git                           `#  source code is hosted on git server.` \
+      subversion                    `#  To checkout translation files.` \
+      ruby                          `#  To checkout translation files.` \
+      valgrind                      `#  To hack at run-time.` \
+      lzip                          `#  For MXE build.` \
+      gzip                          `#  For MXE build.` \
+      unzip                         `#  For MXE build.` \
+      gperf                         `#  For MXE build.` \
+      intltool                      `#  For MXE build.` \
+      unrar                         `#  For MXE build.` \
+      scons                         `#  For MXE build.` \
+      icoutils                      `#  For MXE build.` \
+      mingw32-nsis                  `#  For MXE build.` \
+      python3-mako                  `#  For MXE build.` \
+      python3-pygments              `#  For Continuous integration.` \
+      python3-beautifulsoup4        `#  For Continuous integration.` \
+      python3-soupsieve             `#  For Continuous integration.` \
+      perl-Tie-IxHash               `#  For Continuous integration.` \
+      perl-libxml-perl              `#  For Continuous integration.` \
+      perl-JSON-XS                  `#  For Continuous integration.` \
+      cppcheck                      `#  For Continuous integration.` \
+      clang-analyzer                `#  For Continuous integration.` \
+      doxygen                       `#  To build API DOC.` \
+      kate                          `#  Advanced text editor for developers.` \
+      ktexteditor-plugins           `#  Advanced text editor for developers.` \
+      cmake                         `#  To compile source code.` \
+      ccache                        `#  To compile source code.` \
+      extra-cmake-modules           `#  To compile source code.` \
+      gcc-c++                       `#  To compile source code.` \
+      hugin                         `#  Panorama tool.` \
+      bison                         `#  Panorama tool.` \
+      flex                          `#  Panorama tool.` \
+      wget \
+      coreutils \
+      dmg2img \
+      tesseract \
       eigen3-devel \
       lensfun-devel \
       marble-devel \
@@ -117,6 +138,10 @@ urpmi --auto \
       lib64kf5notifications-devel \
       lib64kf5notifyconfig-devel \
       lib64kf5filemetadata-devel \
-      lib64kf5doctools-devel \
       lib64kf5calendarcore-devel
-      
+
+if   [[ $OS_VERSION == 8 ]] ; then
+    urpmi --auto lib64kf5doctools-devel
+elif [[ $OS_VERSION == 7 ]] ; then
+    urpmi --auto lib64kdoctools-devel
+fi

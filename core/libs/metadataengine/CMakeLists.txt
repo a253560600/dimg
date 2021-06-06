@@ -49,6 +49,7 @@ set(libdmetadata_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/dmetadata/dmetadata_video.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/dmetadata/dmetadata_libheif.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/dmetadata/dmetadata_libraw.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/dmetadata/dmetadata_imagemagick.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/dmetadata/dmetadata_fileio.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/dmetadata/dmetadata_comments.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/dmetadata/dmetadata_template.cpp
@@ -70,6 +71,13 @@ set(libdmetadata_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/containers/videoinfocontainer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/containers/template.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/containers/captionvalues.cpp
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/exiftool/exiftoolparser.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/exiftool/exiftoolparser_command.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/exiftool/exiftoolparser_output.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/exiftool/exiftoolparser_p.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/exiftool/exiftoolprocess.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/exiftool/exiftoolprocess_p.cpp
 )
 
 include_directories(

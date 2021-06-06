@@ -52,7 +52,7 @@ public:
     void tileDeleteInternal(Tile* const tile)                                                             override;
     void prepareTiles(const GeoCoordinates& upperLeft, const GeoCoordinates& lowerRight, int level)       override;
     void regenerateTiles()                                                                                override;
-    Tile* getTile(const TileIndex& tileIndex, const bool stopIfEmpty = false)                             override;
+    Tile* getTile(const TileIndex& tileIndex, const bool stopIfEmpty)                                     override;
     int getTileMarkerCount(const TileIndex& tileIndex)                                                    override;
     int getTileSelectedCount(const TileIndex& tileIndex)                                                  override;
 
@@ -66,13 +66,13 @@ public:
     void onIndicesClicked(const ClickInfo& clickInfo)                                                     override;
     void onIndicesMoved(const TileIndex::List& tileIndicesList,
                                 const GeoCoordinates& targetCoordinates,
-                                const QPersistentModelIndex& targetSnapIndex)                                     override;
+                                const QPersistentModelIndex& targetSnapIndex)                             override;
 
     void setMarkerGeoModelHelper(GeoModelHelper* const modelHelper);
     void removeMarkerIndexFromGrid(const QModelIndex& markerIndex, const bool ignoreSelection = false);
     void addMarkerIndexToGrid(const QPersistentModelIndex& markerIndex);
 
-    void setActive(const bool state)                                                                              override;
+    void setActive(const bool state)                                                                      override;
 
 private Q_SLOTS:
 

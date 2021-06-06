@@ -30,10 +30,6 @@ function(InstallKF5Component
                         OUTPUT_STRIP_TRAILING_WHITESPACE
         )
 
-        if(NOT ${wgetresult} MATCHES 0)
-            message(WARNING "Cannot download MD5 sum for ${name}!")
-        endif()
-
         message(STATUS "--------------------------------")
         message(STATUS "KF5 component    : ${name}")
         message(STATUS "Component version: ${version}")
@@ -105,10 +101,6 @@ function(InstallKF5Component
                         OUTPUT_STRIP_TRAILING_WHITESPACE
         )
 
-        if(NOT ${wgetresult} MATCHES 0)
-            message(WARNING "Cannot download MD5 sum for ${name}!")
-        endif()
-
         message(STATUS "--------------------------------")
         message(STATUS "KF5 component    : ${name}")
         message(STATUS "Component version: ${version}")
@@ -159,10 +151,6 @@ function(InstallKF5Component
                         OUTPUT_STRIP_TRAILING_WHITESPACE
         )
 
-        if(NOT ${wgetresult} MATCHES 0)
-            message(WARNING "Cannot download MD5 sum for ${name}!")
-        endif()
-
         message(STATUS "--------------------------------")
         message(STATUS "KF5 component    : ${name}")
         message(STATUS "Component version: ${version}")
@@ -198,11 +186,11 @@ function(InstallKF5Component
 endfunction()
 
 if(MINGW)
-    set(KF5_VERSION 5.78) # we have Qt 5.14.2 available.
+    set(KF5_VERSION 5.80) # we have Qt 5.14.2 available.
 elseif(APPLE)
-    set(KF5_VERSION 5.78) # we have Qt 5.14.1 available.
+    set(KF5_VERSION 5.80) # we have Qt 5.14.1 available.
 else()
-    set(KF5_VERSION 5.78) # we have Qt 5.14.2 available.
+    set(KF5_VERSION 5.80) # we have Qt 5.14.2 available.
 endif()
 
 if(APPLE)

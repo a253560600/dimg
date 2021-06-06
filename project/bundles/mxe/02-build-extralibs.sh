@@ -99,6 +99,11 @@ ${MXE_BUILD_TARGETS}-cmake --build . --config RelWithDebInfo --target ext_kxmlgu
 ${MXE_BUILD_TARGETS}-cmake --build . --config RelWithDebInfo --target ext_kbookmarks          -- -j$CPU_CORES
 ${MXE_BUILD_TARGETS}-cmake --build . --config RelWithDebInfo --target ext_kimageformats       -- -j$CPU_CORES
 
+# Extra support for digiKam
+
+# libksane support
+${MXE_BUILD_TARGETS}-cmake --build . --config RelWithDebInfo --target ext_libksane            -- -j$CPU_CORES
+
 # Geolocation support
 ${MXE_BUILD_TARGETS}-cmake --build . --config RelWithDebInfo --target ext_marble              -- -j$CPU_CORES
 

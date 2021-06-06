@@ -4,7 +4,7 @@
  * https://www.digikam.org
  *
  * Date        : 2017-05-06
- * Description : template interface to image information.
+ * Description : abstract interface to image information.
  *               This class do not depend of digiKam database library
  *               to permit to re-use plugins with Showfoto.
  *
@@ -154,6 +154,14 @@ QMap<QString, QString> DInfoInterface::passShortcutActionsToWidget(QWidget* cons
     return QMap<QString, QString>();
 }
 
+void DInfoInterface::deleteImage(const QUrl&)
+{
+}
+
+void DInfoInterface::openSetupPage(SetupPage)
+{
+}
+
 // -----------------------------------------------------------------
 
 DItemInfo::DItemInfo(const DInfoInterface::DInfoMap& info)
@@ -228,6 +236,13 @@ QStringList DItemInfo::tagsPath() const
     QVariant val = parseInfoMap(QLatin1String("tagspath"));
 
     return (!val.isNull() ? val.toStringList() : QStringList());
+}
+
+int DItemInfo::albumId() const
+{
+    QVariant val = parseInfoMap(QLatin1String("albumid"));
+
+    return (!val.isNull() ? val.toInt() : -1);
 }
 
 int DItemInfo::orientation() const
@@ -458,6 +473,19 @@ QString DAlbumInfo::path() const
 {
     QString ret;
     DInfoInterface::DInfoMap::const_iterator it = m_info.find(QLatin1String("path"));
+
+    if (it != m_info.end())
+    {
+        ret = it.value().toString();
+    }
+
+    return ret;
+}
+
+QString DAlbumInfo::albumPath() const
+{
+    QString ret;
+    DInfoInterface::DInfoMap::const_iterator it = m_info.find(QLatin1String("albumpath"));
 
     if (it != m_info.end())
     {

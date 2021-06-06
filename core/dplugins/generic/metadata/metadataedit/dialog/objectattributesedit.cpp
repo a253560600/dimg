@@ -101,7 +101,7 @@ ObjectAttributesEdit::ObjectAttributesEdit(QWidget* const parent, int size)
     d->repValueButton->setEnabled(false);
 
     d->valueBox       = new QListWidget(this);
-    d->valueBox->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Ignored);
+    d->valueBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Ignored);
     d->valueBox->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     // --------------------------------------------------------
@@ -160,7 +160,7 @@ ObjectAttributesEdit::ObjectAttributesEdit(QWidget* const parent, int size)
     grid->addWidget(d->valueEdit,      2, 0, 1, 4);
     grid->setRowStretch(3, 10);
     grid->setColumnStretch(0, 10);
-    grid->setColumnStretch(4, 100);
+    grid->setColumnStretch(4, 10);
     grid->setContentsMargins(QMargins());
     grid->setSpacing(QApplication::style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing));
 
@@ -271,8 +271,19 @@ void ObjectAttributesEdit::slotSelectionChanged()
 void ObjectAttributesEdit::slotAddValue()
 {
     QString newValue = d->dataList->itemHighlighted().left(3);
-    newValue.append(QString::fromUtf8(":%1").arg(d->valueEdit->text()));
-    bool found       = false;
+    newValue.append(QLatin1Char(':'));
+
+    if (!d->valueEdit->text().isEmpty())
+    {
+        newValue.append(d->valueEdit->text());
+    }
+    else
+    {
+        newValue.append(d->dataList->itemHighlighted()
+                        .section(QLatin1String(" - "), -1));
+    }
+
+    bool found = false;
 
     for (int i = 0 ; i < d->valueBox->count() ; ++i)
     {

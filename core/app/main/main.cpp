@@ -26,24 +26,26 @@
 
 // Qt includes
 
-#include <QFile>
 #include <QDir>
-#include <QFileInfo>
-#include <QSqlDatabase>
+#include <QFile>
 #include <QString>
+#include <QFileInfo>
+#include <QSettings>
 #include <QStringList>
+#include <QTranslator>
+#include <QMessageBox>
+#include <QSqlDatabase>
 #include <QApplication>
+#include <QStandardPaths>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
-#include <QMessageBox>
-#include <QStandardPaths>
 
 // KDE includes
 
 #include <klocalizedstring.h>
-#include <kaboutdata.h>
 #include <ksharedconfig.h>
 #include <kconfiggroup.h>
+#include <kaboutdata.h>
 
 // ImageMagick includes
 
@@ -159,13 +161,13 @@ int main(int argc, char* argv[])
     aboutData.setCopyrightStatement(DAboutData::copyright());
     aboutData.setOtherText(additionalInformation());
     aboutData.setHomepage(DAboutData::webProjectUrl().url());
+    aboutData.setTranslator(i18nc("NAME OF TRANSLATORS", "Your names"),
+                            i18nc("EMAIL OF TRANSLATORS", "Your emails"));
 
     DAboutData::authorsRegistration(aboutData);
 
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
-    parser.addVersionOption();
-    parser.addHelpOption();
     aboutData.setupCommandLine(&parser);
     parser.addOption(QCommandLineOption(QStringList() << QLatin1String("download-from"),
                                         i18n("Open camera dialog at \"path\""),
@@ -184,6 +186,53 @@ int main(int argc, char* argv[])
 
     parser.process(app);
     aboutData.processCommandLine(&parser);
+
+#if defined Q_OS_WIN || defined Q_OS_MACOS
+
+    bool loadTranslation = true;
+
+#else
+
+    bool loadTranslation = isRunningInAppImageBundle();
+
+#endif
+
+    QString transPath = QStandardPaths::locate(QStandardPaths::DataLocation,
+                                               QLatin1String("translations"),
+                                               QStandardPaths::LocateDirectory);
+
+    QTranslator translator;
+
+    if (loadTranslation && !transPath.isEmpty())
+    {
+        QString klanguagePath = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) +
+                                QLatin1Char('/') + QLatin1String("klanguageoverridesrc");
+
+        if (!klanguagePath.isEmpty())
+        {
+            QSettings settings(klanguagePath, QSettings::IniFormat);
+            settings.beginGroup(QLatin1String("Language"));
+            QString language = settings.value(qApp->applicationName(), QString()).toString();
+            settings.endGroup();
+
+            if (!language.isEmpty())
+            {
+                QLocale::setDefault(language.split(QLatin1Char(':')).first());
+            }
+        }
+
+        bool ret = translator.load(QLocale(), QLatin1String("qtbase"),
+                                   QLatin1String("_"), transPath);
+
+        qCDebug(DIGIKAM_GENERAL_LOG) << "Qt translations path:" << transPath;
+        qCDebug(DIGIKAM_GENERAL_LOG) << "Locale:"  << QLocale().name()
+                                     << "Loading:" << ret;
+
+        if (ret)
+        {
+            app.installTranslator(&translator);
+        }
+    }
 
     MetaEngine::initializeExiv2();
 
@@ -335,7 +384,6 @@ int main(int argc, char* argv[])
         ThumbsDbAccess::cleanUpDatabase();
         FaceDbAccess::cleanUpDatabase();
         SimilarityDbAccess::cleanUpDatabase();
-        MetaEngine::cleanupExiv2();
 
         return 0;
     }
@@ -345,9 +393,22 @@ int main(int argc, char* argv[])
         QIcon::setThemeName(iconTheme);
     }
 
+    // Workaround for the automatic icon theme color
+    // in KF-5.80, depending on the color scheme.
+
+    if      (QIcon::themeName() == QLatin1String("breeze-dark"))
+    {
+        qApp->setPalette(QPalette(Qt::darkGray));
+    }
+    else if (QIcon::themeName() == QLatin1String("breeze"))
+    {
+        qApp->setPalette(QPalette(Qt::white));
+    }
+
 #ifdef Q_OS_WIN
 
     // Necessary to open native open with dialog on windows
+
     CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
 
 #endif
@@ -383,7 +444,7 @@ int main(int argc, char* argv[])
     digikam->restoreSession();
     digikam->show();
 
-    QPointer<FilesDownloader> floader = new FilesDownloader(digikam);
+    QPointer<FilesDownloader> floader = new FilesDownloader(qApp->activeWindow());
 
     if (!floader->checkDownloadFiles())
     {
@@ -411,7 +472,6 @@ int main(int argc, char* argv[])
     ThumbsDbAccess::cleanUpDatabase();
     FaceDbAccess::cleanUpDatabase();
     SimilarityDbAccess::cleanUpDatabase();
-    MetaEngine::cleanupExiv2();
 
 #ifdef Q_OS_WIN
 

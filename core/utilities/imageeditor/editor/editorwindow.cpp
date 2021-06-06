@@ -617,7 +617,7 @@ void EditorWindow::slotAboutToShowUndoMenu()
     m_undoAction->menu()->clear();
     QStringList titles = m_canvas->interface()->getUndoHistory();
 
-    for (int i = 0; i < titles.size(); ++i)
+    for (int i = 0 ; i < titles.size() ; ++i)
     {
         QAction* const action = m_undoAction->menu()->addAction(titles.at(i));
         int id                = i + 1;
@@ -632,7 +632,7 @@ void EditorWindow::slotAboutToShowRedoMenu()
     m_redoAction->menu()->clear();
     QStringList titles = m_canvas->interface()->getRedoHistory();
 
-    for (int i = 0; i < titles.size(); ++i)
+    for (int i = 0 ; i < titles.size() ; ++i)
     {
         QAction* const action = m_redoAction->menu()->addAction(titles.at(i));
         int id                = i + 1;
@@ -1764,24 +1764,22 @@ bool EditorWindow::showFileSaveDialog(const QUrl& initialUrl, QUrl& newURL)
 
     // Start dialog and check if canceled.
 
-    int result;
-
     if (d->currentWindowModalDialog)
     {
         // go application-modal - we will create utter confusion if descending into more than one window-modal dialog
 
         imageFileSaveDialog->setModal(true);
-        result = imageFileSaveDialog->exec();
+        imageFileSaveDialog->exec();
     }
     else
     {
         imageFileSaveDialog->setWindowModality(Qt::WindowModal);
         d->currentWindowModalDialog = imageFileSaveDialog;
-        result                      = imageFileSaveDialog->exec();
+        imageFileSaveDialog->exec();
         d->currentWindowModalDialog = nullptr;
     }
 
-    if (!imageFileSaveDialog || (imageFileSaveDialog->result() != QDialog::Accepted))
+    if (!imageFileSaveDialog || imageFileSaveDialog->selectedUrls().isEmpty())
     {
         qCDebug(DIGIKAM_GENERAL_LOG) << "File Save Dialog rejected";
         delete imageFileSaveDialog;
@@ -1789,17 +1787,7 @@ bool EditorWindow::showFileSaveDialog(const QUrl& initialUrl, QUrl& newURL)
         return false;
     }
 
-    QList<QUrl> urls = imageFileSaveDialog->selectedUrls();
-
-    if (urls.isEmpty())
-    {
-        qCDebug(DIGIKAM_GENERAL_LOG) << "no target url";
-        delete imageFileSaveDialog;
-
-        return false;
-    }
-
-    newURL = urls.first();
+    newURL = imageFileSaveDialog->selectedUrls().first();
     newURL.setPath(QDir::cleanPath(newURL.path()));
 
     QFileInfo fi(newURL.fileName());
@@ -1831,6 +1819,7 @@ bool EditorWindow::showFileSaveDialog(const QUrl& initialUrl, QUrl& newURL)
     {
         QPointer<FileSaveOptionsDlg> fileSaveOptionsDialog = new FileSaveOptionsDlg(this, options);
         options->setImageFileFormat(newURL.fileName());
+        int result;
 
         if (d->currentWindowModalDialog)
         {

@@ -73,7 +73,23 @@ QVariant AlbumModel::decorationRoleData(Album* album) const
 {
     // asynchronous signals are handled by parent class
 
-    QPixmap pix = AlbumThumbnailLoader::instance()->getAlbumThumbnailDirectly(static_cast<PAlbum*>(album));
+    QPixmap thumb = AlbumThumbnailLoader::instance()->getAlbumThumbnailDirectly(static_cast<PAlbum*>(album));
+    int size      = ApplicationSettings::instance()->getTreeViewIconSize();
+
+    double ratio  = thumb.devicePixelRatio();
+    int rsize     = qRound((double)size * ratio);
+    thumb         = thumb.scaled(rsize, rsize, Qt::KeepAspectRatio,
+                                               Qt::SmoothTransformation);
+
+    QPixmap pix(rsize, rsize);
+    pix.fill(Qt::transparent);
+    pix.setDevicePixelRatio(ratio);
+
+    QPainter p(&pix);
+    p.drawPixmap((rsize - thumb.width())  / 2,
+                 (rsize - thumb.height()) / 2, thumb);
+    p.end();
+
     prepareAddExcludeDecoration(album, pix);
 
     return pix;
@@ -113,10 +129,12 @@ TagModel::TagModel(RootAlbumBehavior rootBehavior, QObject* const parent)
                                   rootBehavior, parent)
 {
     m_columnHeader = i18n("Tags");
-    m_faceTagModel = false;
     setupThumbnailLoading();
 
-    setTagCount(NormalTagCount);
+    connect(AlbumManager::instance(), SIGNAL(signalTAlbumsDirty(QMap<int,int>)),
+            this, SLOT(setCountMap(QMap<int,int>)));
+
+    setCountMap(AlbumManager::instance()->getTAlbumsCount());
 }
 
 void TagModel::setColumnHeader(const QString& header)
@@ -137,7 +155,8 @@ QVariant TagModel::albumData(Album* a, int role) const
         (a->id() != FaceTags::unknownPersonTagId()))
     {
         QString res = AbstractCheckableAlbumModel::albumData(a, role).toString() +
-                      i18ncp("@info: unconfirmed faces in album", " (%1 new)", " (%1 new)", m_unconfirmedFaceCount.value(a->id()));
+                      i18ncp("@info: unconfirmed faces in album", " (%1 new)", " (%1 new)",
+                             m_unconfirmedFaceCount.value(a->id()));
 
         return res;
     }
@@ -149,11 +168,11 @@ QVariant TagModel::decorationRoleData(Album* album) const
 {
     TAlbum* const tagAlbum = static_cast<TAlbum*>(album);
 
-    if (m_faceTagModel || tagAlbum->hasProperty(TagPropertyName::person()))
+    if (isFaceTagModel() || tagAlbum->hasProperty(TagPropertyName::person()))
     {
         QPixmap face = AlbumThumbnailLoader::instance()->getFaceThumbnailDirectly(tagAlbum);
-        int size     = m_faceTagModel ? ApplicationSettings::instance()->getTreeViewFaceSize()
-                                      : ApplicationSettings::instance()->getTreeViewIconSize();
+        int size     = isFaceTagModel() ? ApplicationSettings::instance()->getTreeViewFaceSize()
+                                        : ApplicationSettings::instance()->getTreeViewIconSize();
 
         double ratio = face.devicePixelRatio();
         int rsize    = qRound((double)size * ratio);
@@ -189,6 +208,7 @@ QVariant TagModel::fontRoleData(Album* a) const
     {
         QFont font;
         font.setBold(true);
+
         return font;
     }
 
@@ -200,53 +220,54 @@ Album* TagModel::albumForId(int id) const
     return AlbumManager::instance()->findTAlbum(id);
 }
 
-void TagModel::setTagCount(TagCountMode mode)
+void TagModel::activateFaceTagModel()
 {
     disconnect(AlbumManager::instance(), SIGNAL(signalTAlbumsDirty(QMap<int,int>)),
                this, SLOT(setCountMap(QMap<int,int>)));
 
-    if (mode == NormalTagCount)
-    {
-        connect(AlbumManager::instance(), SIGNAL(signalTAlbumsDirty(QMap<int,int>)),
-                this, SLOT(setCountMap(QMap<int,int>)));
+    connect(AlbumManager::instance(), &AlbumManager::signalFaceCountsDirty,
+            this, [=](const QMap<int, int>& faceCount,
+                      const QMap<int, int>& uFaceCount,
+                      const QList<int>& toUpdatedFaces)
+        {
+            setCountMap(faceCount);
+            m_unconfirmedFaceCount = uFaceCount;
 
-        setCountMap(AlbumManager::instance()->getTAlbumsCount());
-    }
-    else
-    {
-        connect(AlbumManager::instance(), &AlbumManager::signalFaceCountsDirty,
-                this, [=](const QMap<int, int>& faceCount,
-                          const QMap<int, int>& uFaceCount,
-                          const QList<int>& toUpdatedFaces)
+            foreach (int id, toUpdatedFaces)
             {
-                setCountMap(faceCount);
-                m_unconfirmedFaceCount = uFaceCount;
+                Album* const album = albumForId(id);
 
-                foreach (int id, toUpdatedFaces)
+                if (!album)
                 {
-                    Album* const album = albumForId(id);
-
-                    if (!album)
-                    {
-                        continue;
-                    }
-
-                    QModelIndex index = indexForAlbum(album);
-
-                    if (!index.isValid())
-                    {
-                        continue;
-                    }
-
-                    emit dataChanged(index, index);
+                    continue;
                 }
+
+                QModelIndex index = indexForAlbum(album);
+
+                if (!index.isValid())
+                {
+                    continue;
+                }
+
+                emit dataChanged(index, index);
             }
-        );
+        }
+    );
 
-        m_faceTagModel = true;
+    setFaceTagModel(true);
+    setCountMap(AlbumManager::instance()->getFaceCount());
+}
 
-        setCountMap(AlbumManager::instance()->getFaceCount());
+bool TagModel::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+    TAlbum* const talbum = albumForIndex(index);
+
+    if (talbum && talbum->isInternalTag())
+    {
+        return false;
     }
+
+    return AbstractCheckableAlbumModel::setData(index, value, role);
 }
 
 // ------------------------------------------------------------------

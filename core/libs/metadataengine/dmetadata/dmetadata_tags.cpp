@@ -67,16 +67,22 @@ bool DMetadata::getItemTagsPath(QStringList& tagsPath,
                     switch (currentOpts)
                     {
                         case NamespaceEntry::TAG_XMPBAG:
+                        {
                             tagsPath = getXmpTagStringBag(nameSpace, false);
                             break;
+                        }
 
                         case NamespaceEntry::TAG_XMPSEQ:
+                        {
                             tagsPath = getXmpTagStringSeq(nameSpace, false);
                             break;
+                        }
 
                         case NamespaceEntry::TAG_ACDSEE:
+                        {
                             getACDSeeTagsPath(tagsPath);
                             break;
+                        }
 
                         // not used here, to suppress warnings
                         case NamespaceEntry::COMMENT_XMP:
@@ -84,7 +90,9 @@ bool DMetadata::getItemTagsPath(QStringList& tagsPath,
                         case NamespaceEntry::COMMENT_ATLLANGLIST:
                         case NamespaceEntry::NO_OPTS:
                         default:
+                        {
                             break;
+                        }
                     }
 
                     if      (!tagsPath.isEmpty())
@@ -288,7 +296,7 @@ bool DMetadata::setItemTagsPath(const QStringList& tagsPath, const DMetadataSett
     return true;
 }
 
-bool DMetadata::getACDSeeTagsPath(QStringList &tagsPath) const
+bool DMetadata::getACDSeeTagsPath(QStringList& tagsPath) const
 {
     // Try to get Tags Path list from ACDSee 8 Pro categories.
 
@@ -341,7 +349,7 @@ bool DMetadata::getACDSeeTagsPath(QStringList &tagsPath) const
     return false;
 }
 
-bool DMetadata::setACDSeeTagsPath(const QStringList &tagsPath) const
+bool DMetadata::setACDSeeTagsPath(const QStringList& tagsPath) const
 {
     // Converting Tags path list to ACDSee 8 Pro categories.
 

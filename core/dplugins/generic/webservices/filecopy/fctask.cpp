@@ -80,14 +80,30 @@ void FCTask::run()
         return;
     }
 
+    bool ok   = true;
     QUrl dest = d->settings.destUrl.adjusted(QUrl::StripTrailingSlash);
+
+    if (d->settings.iface && d->settings.iface->supportAlbums() && d->settings.albumPath)
+    {
+        DInfoInterface::DInfoMap infoMap  = d->settings.iface->itemInfo(d->srcUrl);
+        DItemInfo info(infoMap);
+        DInfoInterface::DInfoMap albumMap = d->settings.iface->albumInfo(info.albumId());
+        DAlbumInfo album(albumMap);
+
+        dest.setPath(dest.path() + album.albumPath());
+        dest = dest.adjusted(QUrl::StripTrailingSlash);
+
+        if (!QDir(dest.toLocalFile()).exists())
+        {
+            ok = QDir().mkpath(dest.toLocalFile());
+        }
+    }
+
     dest.setPath(dest.path() +
                  QLatin1Char('/') +
                  d->srcUrl.fileName());
 
-    bool ok = false;
-
-    if      (d->settings.behavior == FCContainer::CopyFile)
+    if      (ok && (d->settings.behavior == FCContainer::CopyFile))
     {
         QFileInfo srcInfo(d->srcUrl.toLocalFile());
         QString suffix = srcInfo.suffix().toUpper();
@@ -119,8 +135,9 @@ void FCTask::run()
             }
         }
     }
-    else if ((d->settings.behavior == FCContainer::FullSymLink) ||
-             (d->settings.behavior == FCContainer::RelativeSymLink))
+    else if (ok                                                     &&
+             ((d->settings.behavior == FCContainer::FullSymLink)    ||
+              (d->settings.behavior == FCContainer::RelativeSymLink)))
     {
 
 #ifdef Q_OS_WIN
@@ -208,7 +225,7 @@ bool FCTask::imageResize(const QString& orgPath, const QString& destPath)
 
         if (d->settings.imageFormat == FCContainer::JPEG)
         {
-            destFile.append(QLatin1String(".jpeg"));
+            destFile.append(QLatin1String(".jpg"));
             deleteTargetFile(destFile);
 
             img.setAttribute(QLatin1String("quality"), d->settings.imageCompression);

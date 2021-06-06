@@ -213,9 +213,11 @@ XMPProperties::XMPProperties(QWidget* const parent)
 
     // --------------------------------------------------------
 
+    DHBox* const objectBox  = new DHBox(this);
     d->objectAttributeCheck = new MetadataCheckBox(i18nc("@option", "Attribute:"), this);
-    d->objectAttributeCB    = new SqueezedComboBox(this);
-    d->objectAttributeEdit  = new QLineEdit(this);
+    d->objectAttributeCB    = new SqueezedComboBox(objectBox);
+    d->objectAttributeCB->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    d->objectAttributeEdit  = new QLineEdit(objectBox);
     d->objectAttributeEdit->setClearButtonEnabled(true);
     d->objectAttributeEdit->setWhatsThis(i18nc("@info", "Set here the editorial attribute description of the content."));
 
@@ -259,8 +261,7 @@ XMPProperties::XMPProperties(QWidget* const parent)
     grid->addWidget(d->objectTypeEdit,                      3, 0, 1, 5);
     grid->addWidget(new DLineWidget(Qt::Horizontal, this),  4, 0, 1, 5);
     grid->addWidget(d->objectAttributeCheck,                5, 0, 1, 1);
-    grid->addWidget(d->objectAttributeCB,                   5, 1, 1, 2);
-    grid->addWidget(d->objectAttributeEdit,                 5, 3, 1, 2);
+    grid->addWidget(objectBox,                              5, 1, 1, 4);
     grid->addWidget(new DLineWidget(Qt::Horizontal, this),  6, 0, 1, 5);
     grid->addWidget(d->originalTransCheck,                  7, 0, 1, 1);
     grid->addWidget(d->originalTransEdit,                   7, 1, 1, 4);
@@ -554,7 +555,18 @@ void XMPProperties::applyMetadata(QByteArray& xmpData)
     {
         QString objectAttribute;
         objectAttribute = QString().asprintf("%3d", d->objectAttributeCB->currentIndex()+1);
-        objectAttribute.append(QString::fromUtf8(":%1").arg(d->objectAttributeEdit->text()));
+        objectAttribute.append(QLatin1Char(':'));
+
+        if (!d->objectAttributeEdit->text().isEmpty())
+        {
+            objectAttribute.append(d->objectAttributeEdit->text());
+        }
+        else
+        {
+            objectAttribute.append(d->objectAttributeCB->itemHighlighted()
+                                   .section(QLatin1String(" - "), -1));
+        }
+
         meta->setXmpTagString("Xmp.iptc.IntellectualGenre", objectAttribute);
     }
     else if (d->objectAttributeCheck->isValid())

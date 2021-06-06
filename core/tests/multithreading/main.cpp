@@ -29,10 +29,10 @@
 #include <QApplication>
 #include <QStandardPaths>
 #include <QUrl>
-#include <QDebug>
 
 // Local includes
 
+#include "digikam_debug.h"
 #include "drawfiles.h"
 #include "processordlg.h"
 #include "dfiledialog.h"
@@ -47,19 +47,23 @@ int main(int argc, char* argv[])
     if (argc <= 1)
     {
         QString filter = QString::fromLatin1("Raw Files") + QString::fromLatin1(" (%1)").arg(Digikam::s_rawFileExtensions());
-        qDebug() << filter;
+        qCDebug(DIGIKAM_TESTS_LOG) << filter;
 
         QStringList files = DFileDialog::getOpenFileNames(nullptr, QString::fromLatin1("Select RAW files to process"),
                                                          QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first(),
                                                          filter);
 
         foreach (const QString& f, files)
+        {
             list.append(QUrl::fromLocalFile(f));
+        }
     }
     else
     {
         for (int i = 1 ; i < argc ; ++i)
+        {
             list.append(QUrl::fromLocalFile(QString::fromLocal8Bit(argv[i])));
+        }
     }
 
     if (!list.isEmpty())

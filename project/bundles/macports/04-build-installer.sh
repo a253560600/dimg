@@ -136,6 +136,7 @@ binaries="$OTHER_APPS"
 # Additional Files/Directories - to be copied recursively but not checked for dependencies
 # Note: dSYM directories aee copied as well and cleaned later if debug symbols must be removed in final bundle.
 OTHER_DIRS="\
+libexec/qt5/translations \
 lib/libdigikam*.dSYM \
 lib/plugins \
 lib/libgphoto2 \
@@ -284,6 +285,7 @@ for path in $OTHER_DIRS ; do
     echo "   Copying $path"
     cp -a "$INSTALL_PREFIX/$path" "$TEMPROOT/$dir/"
 done
+
 
 echo "---------- Copying data files..."
 
@@ -576,6 +578,12 @@ for DIR in ${MARIADBDIRS[@]} ; do
     done
 
 done
+
+#################################################################################################
+# See bug #436624: move mariadb share files at basedir (this must be done after patch operations)
+
+rsync -a "$TEMPROOT/digikam.app/Contents/share/mariadb" "$TEMPROOT/digikam.app/Contents/lib/mariadb/share/"
+rm -fr "$TEMPROOT/digikam.app/Contents/share/mariadb"
 
 #################################################################################################
 # Build PKG file

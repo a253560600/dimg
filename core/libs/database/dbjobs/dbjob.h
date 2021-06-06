@@ -54,7 +54,7 @@ Q_SIGNALS:
 private:
 
     // Disable
-    explicit DBJob(QObject*);
+    explicit DBJob(QObject*) = delete;
 };
 
 // ----------------------------------------------
@@ -112,7 +112,7 @@ private:
 private:
 
     // Disable
-    DatesJob(QObject*);
+    DatesJob(QObject*) = delete;
 };
 
 // ----------------------------------------------
@@ -183,14 +183,19 @@ class DIGIKAM_DATABASE_EXPORT SearchesJob : public DBJob
 public:
 
     explicit SearchesJob(const SearchesDBJobInfo& jobInfo);
+    SearchesJob(const SearchesDBJobInfo& jobInfo,
+                const QSet<qlonglong>::const_iterator& begin,
+                const QSet<qlonglong>::const_iterator& end,
+                HaarIface* iface);
+
     ~SearchesJob()  override;
 
-    bool isCanceled();
+    bool isCanceled() const;
 
 Q_SIGNALS:
 
-    void processedSize(int);
-    void totalSize(int);
+    void signalImageProcessed();
+    void signalDuplicatesResults(const HaarIface::DuplicatesResultsMap&);
 
 protected:
 
@@ -198,12 +203,18 @@ protected:
 
 private:
 
-    SearchesDBJobInfo m_jobInfo;
+    SearchesDBJobInfo                m_jobInfo;
+    QSet<qlonglong>::const_iterator  m_begin;
+    QSet<qlonglong>::const_iterator  m_end;
+    HaarIface*                       m_iface;
 
 private:
 
     // Disable
     SearchesJob(QObject*);
+
+    void runSearches();
+    void runFindDuplicates();
 };
 
 } // namespace Digikam

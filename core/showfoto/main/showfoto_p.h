@@ -98,15 +98,16 @@
 #include "showfotothumbnailmodel.h"
 #include "showfotocategorizedview.h"
 #include "showfotosettings.h"
-#include "dmetainfoiface.h"
+#include "showfotoinfoiface.h"
 #include "dexpanderbox.h"
 #include "dfiledialog.h"
 #include "dpluginloader.h"
+#include "exiftoolparser.h"
 
 namespace ShowFoto
 {
 
-class Q_DECL_HIDDEN ShowFoto::Private
+class Q_DECL_HIDDEN Showfoto::Private
 {
 public:
 
@@ -156,6 +157,6 @@ public:
     ShowfotoSettings*                settings;
 };
 
-} // namespace Showfoto
+} // namespace ShowFoto
 
 #endif // SHOW_FOTO_PRIVATE_H

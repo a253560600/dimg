@@ -53,7 +53,7 @@ public:
           m_alpha     (0),
           m_sixteenBit(false)
     {
-    };
+    }
 
     /**
      * Read value from data. Equivalent to setColor()
@@ -67,13 +67,13 @@ public:
      * Initialize with given RGBA values
      */
     DColor(int red, int green, int blue, int alpha, bool sixteenBit)
-        : m_red(red),
-          m_green(green),
-          m_blue(blue),
-          m_alpha(alpha),
-          m_sixteenBit(sixteenBit)
+        : m_red         (red),
+          m_green       (green),
+          m_blue        (blue),
+          m_alpha       (alpha),
+          m_sixteenBit  (sixteenBit)
     {
-    };
+    }
 
     /**
      * Read values from QColor, convert to sixteenBit of sixteenBit is true
@@ -153,12 +153,12 @@ public:
     inline bool isPureGrayValue(int v)
     {
         return ((m_red == v) && (m_green == v) && (m_blue == v));
-    };
+    }
 
     inline bool isPureGray()
     {
         return ((m_red == m_green) && (m_red == m_blue));
-    };
+    }
 
     /**
      * Convert the color values of this color to and from sixteen bit

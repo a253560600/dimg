@@ -31,7 +31,7 @@
 namespace ShowFoto
 {
 
-class SetupMetadata : public QScrollArea
+class ShowfotoSetupMetadata : public QScrollArea
 {
     Q_OBJECT
 
@@ -43,13 +43,14 @@ public:
         ExifViewer,
         MakernotesViewer,
         IptcViewer,
-        XmpViewer
+        XmpViewer,
+        ExifTool
     };
 
 public:
 
-    explicit SetupMetadata(QWidget* const parent = nullptr);
-    ~SetupMetadata() override;
+    explicit ShowfotoSetupMetadata(QWidget* const parent = nullptr);
+    ~ShowfotoSetupMetadata() override;
 
     void applySettings();
     void setActiveTab(MetadataTab tab);

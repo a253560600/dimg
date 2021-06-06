@@ -463,7 +463,7 @@ void FbTalker::addPhoto(const QString& imgPath, const QString& albumID, const QS
 
 //----------------------------------------------------------------------------------------------------
 
-QString FbTalker::errorToText(int errCode, const QString &errMsg)
+QString FbTalker::errorToText(int errCode, const QString& errMsg)
 {
     QString transError;
     qCDebug(DIGIKAM_WEBSERVICES_LOG) << "errorToText: " << errCode << ": " << errMsg;
@@ -540,7 +540,7 @@ void FbTalker::slotFinished(QNetworkReply* reply)
 
     m_buffer.append(reply->readAll());
 
-    switch(d->state)
+    switch (d->state)
     {
         case (Private::FB_GETLOGGEDINUSER):
             parseResponseGetLoggedInUser(m_buffer);

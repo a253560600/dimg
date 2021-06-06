@@ -67,17 +67,25 @@
 #include "dng_xmp.h"
 #include "dng_xmp_sdk.h"
 
+// XMP SDK includes
+
+#include "XMP_Version.h"
+
 // Local includes
 
 #include "digikam_debug.h"
-#include "dngwriterhost.h"
+#include "digikam_version.h"
 #include "dfileoperations.h"
 #include "dmetadata.h"
+#include "exiftoolparser.h"
+#include "exiftoolprocess.h"
 
 #define CHUNK 65536
 
 namespace Digikam
 {
+
+class DNGWriterHost;
 
 class Q_DECL_HIDDEN DNGWriter::Private
 {
@@ -90,12 +98,13 @@ public:
         LinearRaw,
         Standard,
         Fuji,
+        Fuji6x6,
         FourColor
     };
 
 public:
 
-    explicit Private();
+    explicit Private(DNGWriter* const dd);
     ~Private();
 
 public:
@@ -106,17 +115,102 @@ public:
 
     bool fujiRotate(QByteArray& rawData, DRawInfo& identify) const;
 
+    QString dngErrorCodeToString(int errorCode)              const;
+
+    QString dngBayerPatternToString(int pattern)             const;
+
+    /**
+     * Code to hack RAW data extraction.
+     */
+    int debugExtractedRAWData(const QByteArray& rawData);
+
 public:
 
-    bool    cancel;
-    bool    jpegLossLessCompression;
-    bool    updateFileDate;
-    bool    backupOriginalRawFile;
+    // DNG processing stages.
 
-    int     previewMode;
+    int importRaw(DRawInfo* const identify,
+                  DRawInfo* const identifyMake);
 
-    QString inputFile;
-    QString outputFile;
+    int identMosaic(DRawInfo* const identify,
+                    DRawInfo* const identifyMake);
+
+    int createNegative(AutoPtr<dng_negative>& negative,
+                       DRawInfo* const identify);
+
+    int storeExif(DNGWriterHost& host,
+                  AutoPtr<dng_negative>& negative,
+                  DRawInfo* const identify,
+                  DRawInfo* const identifyMake,
+                  DMetadata* const meta);
+
+    int storeMakernote(DNGWriterHost& host,
+                       AutoPtr<dng_negative>& negative,
+                       DRawInfo* const identify,
+                       DRawInfo* const identifyMake,
+                       DMetadata* const meta);
+
+    int storeXmp(DNGWriterHost& host,
+                 AutoPtr<dng_negative>& negative,
+                 DRawInfo* const identify,
+                 DRawInfo* const identifyMake,
+                 DMetadata* const meta);
+
+    int backupRaw(DNGWriterHost& host,
+                  AutoPtr<dng_negative>& negative);
+
+    int exportTarget(DNGWriterHost& host,
+                     AutoPtr<dng_negative>& negative,
+                     AutoPtr<dng_image>& image);
+
+    int exifToolPostProcess();
+
+private:
+
+    void backportNikonMakerNote(DMetadata* const meta);
+    void backportCanonMakerNote(DMetadata* const meta);
+    void backportPentaxMakerNote(DMetadata* const meta);
+    void backportOlympusMakerNote(DMetadata* const meta);
+    void backportPanasonicMakerNote(DMetadata* const meta);
+    void backportSonyMakerNote(DMetadata* const meta);
+    void storeLensInformation();
+    void backupMakernote(DNGWriterHost& host,
+                         AutoPtr<dng_negative>& negative,
+                         DRawInfo* const identify,
+                         DRawInfo* const identifyMake,
+                         DMetadata* const meta);
+
+public:
+
+    DNGWriter*          parent;                     ///< Parent class instance.
+    DNGBayerPattern     bayerPattern;
+    uint32              filter;
+
+    bool                metaLoaded;                 ///< Set to true if metadata are properly loaded at Exif stage.
+    bool                cancel;
+    bool                jpegLossLessCompression;
+    bool                updateFileDate;
+    bool                backupOriginalRawFile;
+
+    int                 previewMode;
+    int                 activeWidth;
+    int                 activeHeight;
+    int                 outputHeight;
+    int                 outputWidth;
+    int                 width;
+    int                 height;
+
+    QString             inputFile;
+    QString             outputFile;
+    QString             dngFilePath;
+    QByteArray          rawData;
+
+    QFileInfo           inputInfo;
+    QFileInfo           outputInfo;
+    QDateTime           fileDate;
+
+    dng_date_time_info  orgDateTimeInfo;
+    dng_rect            activeArea;
+    dng_exif*           exif;                       ///< Instance to Exif DNG SDK container.
 };
 
 } // namespace Digikam

@@ -89,7 +89,7 @@ private:
     void          advanceFrame();
     void          previousFrame();
     void          loadImage();
-     void          montage(QImage& top, QImage& bot);
+    void          montage(QImage& top, QImage& bot);
     EffectMethod  getRandomEffect();
     void          showEndOfShow();
     void          showOverlays();
@@ -122,7 +122,9 @@ private Q_SLOTS:
 private:
 
     // Disable
-    explicit PresentationGL(QWidget*);
+    explicit PresentationGL(QWidget*) = delete;
+
+private:
 
     class Private;
     Private* const d;

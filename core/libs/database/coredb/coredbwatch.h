@@ -166,7 +166,7 @@ public:
 private:
 
     // Disabled
-    explicit CoreDbWatch(QObject*);
+    explicit CoreDbWatch(QObject*) = delete;
 
     Private* const d;
 };
@@ -181,7 +181,7 @@ class DBusSignalListenerThread : public QThread
 
 public:
 
-    explicit DBusSignalListenerThread(CoreDbWatch* const q, CoreDbWatch::Private* const d);
+    explicit DBusSignalListenerThread(CoreDbWatch* const qq, CoreDbWatch::Private* const dd);
     ~DBusSignalListenerThread() override;
 
     void run()                  override;

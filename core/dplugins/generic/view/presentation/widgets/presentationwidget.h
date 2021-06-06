@@ -113,6 +113,7 @@ private Q_SLOTS:
     void    slotPrev();
     void    slotNext();
     void    slotClose();
+    void    slotRemoveImageFromList();
 
     void    slotVideoLoaded(bool);
     void    slotVideoFinished();
@@ -135,7 +136,9 @@ private:
 private:
 
     // Disable
-    explicit PresentationWidget(QWidget*);
+    explicit PresentationWidget(QWidget*) = delete;
+
+private:
 
     class Private;
     Private* const d;

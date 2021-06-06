@@ -29,6 +29,8 @@
 
 #include <QDir>
 #include <QFile>
+#include <QSettings>
+#include <QTranslator>
 #include <QMessageBox>
 #include <QApplication>
 #include <QStandardPaths>
@@ -128,13 +130,13 @@ int main(int argc, char* argv[])
     aboutData.setOtherText(additionalInformation());
     aboutData.setHomepage(DAboutData::webProjectUrl().url());
     aboutData.setProductName(QByteArray("digikam/showfoto"));   // For bugzilla
+    aboutData.setTranslator(i18nc("NAME OF TRANSLATORS", "Your names"),
+                            i18nc("EMAIL OF TRANSLATORS", "Your emails"));
 
     DAboutData::authorsRegistration(aboutData);
 
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
-    parser.addVersionOption();
-    parser.addHelpOption();
     aboutData.setupCommandLine(&parser);
     parser.addPositionalArgument(QLatin1String("files"), i18n("File(s) or folder(s) to open"), QLatin1String("[file(s) or folder(s)]"));
     parser.process(app);
@@ -143,6 +145,53 @@ int main(int argc, char* argv[])
     KSharedConfig::Ptr config = KSharedConfig::openConfig();
     KConfigGroup group        = config->group(QLatin1String("ImageViewer Settings"));
     QString iconTheme         = group.readEntry(QLatin1String("Icon Theme"), QString());
+
+#if defined Q_OS_WIN || defined Q_OS_MACOS
+
+    bool loadTranslation = true;
+
+#else
+
+    bool loadTranslation = isRunningInAppImageBundle();
+
+#endif
+
+    QString transPath = QStandardPaths::locate(QStandardPaths::DataLocation,
+                                               QLatin1String("translations"),
+                                               QStandardPaths::LocateDirectory);
+
+    QTranslator translator;
+
+    if (loadTranslation && !transPath.isEmpty())
+    {
+        QString klanguagePath = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) +
+                                QLatin1Char('/') + QLatin1String("klanguageoverridesrc");
+
+        if (!klanguagePath.isEmpty())
+        {
+            QSettings settings(klanguagePath, QSettings::IniFormat);
+            settings.beginGroup(QLatin1String("Language"));
+            QString language = settings.value(qApp->applicationName(), QString()).toString();
+            settings.endGroup();
+
+            if (!language.isEmpty())
+            {
+                QLocale::setDefault(language.split(QLatin1Char(':')).first());
+            }
+        }
+
+        bool ret = translator.load(QLocale(), QLatin1String("qtbase"),
+                                   QLatin1String("_"), transPath);
+
+        qCDebug(DIGIKAM_GENERAL_LOG) << "Qt translations path:" << transPath;
+        qCDebug(DIGIKAM_GENERAL_LOG) << "Locale:"  << QLocale().name()
+                                     << "Loading:" << ret;
+
+        if (ret)
+        {
+            app.installTranslator(&translator);
+        }
+    }
 
     MetaEngine::initializeExiv2();
 
@@ -179,12 +228,27 @@ int main(int argc, char* argv[])
         QIcon::setThemeName(iconTheme);
     }
 
+    // Workaround for the automatic icon theme color
+    // in KF-5.80, depending on the color scheme.
+
+    if      (QIcon::themeName() == QLatin1String("breeze-dark"))
+    {
+        qApp->setPalette(QPalette(Qt::darkGray));
+    }
+    else if (QIcon::themeName() == QLatin1String("breeze"))
+    {
+        qApp->setPalette(QPalette(Qt::white));
+    }
+
 #ifdef Q_OS_WIN
+
     // Necessary to open native open with dialog on windows
+
     CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+
 #endif
 
-    ShowFoto::ShowFoto* const w = new ShowFoto::ShowFoto(urlList);
+    ShowFoto::Showfoto* const w = new ShowFoto::Showfoto(urlList);
 
     // If application storage place in home directory to save customized XML settings files do not exist, create it,
     // else QFile will not able to create new files as well.
@@ -203,7 +267,7 @@ int main(int argc, char* argv[])
 
     w->show();
 
-    QPointer<FilesDownloader> floader = new FilesDownloader(w);
+    QPointer<FilesDownloader> floader = new FilesDownloader(qApp->activeWindow());
 
     if (!floader->checkDownloadFiles())
     {
@@ -212,17 +276,19 @@ int main(int argc, char* argv[])
 
     int ret = app.exec();
 
-    MetaEngine::cleanupExiv2();
-
 #ifdef Q_OS_WIN
+
     // Necessary to open native open with dialog on windows
 
     CoUninitialize();
+
 #endif
 
 #ifdef HAVE_IMAGE_MAGICK
 #   if MagickLibVersion >= 0x693
+
     TerminateMagick();
+
 #   endif
 #endif
 

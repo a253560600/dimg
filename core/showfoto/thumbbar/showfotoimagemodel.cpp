@@ -562,7 +562,7 @@ QList<QPair<int, int> > ShowfotoItemModel::toContiguousPairs(const QList<int>& u
 
     for (int i = 1 ; i < indices.size() ; ++i)
     {
-        const int &index = indices.at(i);
+        const int& index = indices.at(i);
 
         if (index == pair.second + 1)
         {
@@ -632,7 +632,7 @@ QVariant ShowfotoItemModel::data(const QModelIndex& index, int role) const
         return QVariant();
     }
 
-    switch(role)
+    switch (role)
     {
         case Qt::DisplayRole:
         case Qt::ToolTipRole:

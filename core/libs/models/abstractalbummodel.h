@@ -143,6 +143,11 @@ public:
      */
     Album::Type albumType()                         const;
 
+    /**
+     * Returns true if the album model a face tag model
+     */
+    bool isFaceTagModel()                           const;
+
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole)                                             const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole)                       const override;
     int rowCount(const QModelIndex& parent = QModelIndex())                                                         const override;
@@ -174,6 +179,7 @@ protected:
      */
     void setEnableDrag(bool enable);
     void setEnableDrop(bool enable);
+    void setFaceTagModel(bool enable);
 
     /**
      * NOTE: these can be reimplemented in a subclass

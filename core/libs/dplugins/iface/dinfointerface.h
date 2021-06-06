@@ -4,7 +4,7 @@
  * https://www.digikam.org
  *
  * Date        : 2017-05-06
- * Description : template interface to image information.
+ * Description : abstract interface to image information.
  *               This class do not depend of digiKam database library
  *               to permit to re-use plugins with Showfoto.
  *
@@ -55,6 +55,7 @@ namespace Digikam
 class DIGIKAM_EXPORT DInfoInterface : public QObject
 {
     Q_OBJECT
+
 
 public:
 
@@ -145,6 +146,23 @@ public:
 
     /// Pass extra shortcut actions to widget and return prefixes of shortcuts
     virtual QMap<QString, QString> passShortcutActionsToWidget(QWidget* const)  const;
+
+public:
+
+    /// Manipulate with item
+    virtual void deleteImage(const QUrl& url);
+
+public:
+
+    enum SetupPage
+    {
+        ExifToolPage = 0
+    };
+
+    /// Open configuration dialog page.
+    virtual void openSetupPage(SetupPage page);
+
+    Q_SIGNAL void signalSetupChanged();
 };
 
 // -------------------------------------------------------------------------------------------------------------
@@ -189,13 +207,14 @@ public:
 public:
 
     QString            name()                 const;
-    QString            comment()              const;
     QString            title()                const;
+    QString            comment()              const;
     QSize              dimensions()           const;
     QDateTime          dateTime()             const;
     QStringList        tagsPath()             const;
     QStringList        keywords()             const;
 
+    int                albumId()              const;
     int                orientation()          const;
     void               setOrientation(int);
     int                rating()               const;
@@ -250,6 +269,7 @@ public:
     QString caption()                         const;
     QDate   date()                            const;
     QString path()                            const;
+    QString albumPath()                       const;
 
 private:
 

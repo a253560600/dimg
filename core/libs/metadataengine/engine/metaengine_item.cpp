@@ -65,7 +65,9 @@ bool MetaEngine::setItemProgramId(const QString& program, const QString& version
             Exiv2::ExifData::const_iterator it = exifData.findKey(key);
 
             if (it == exifData.end())
+            {
                 d->exifMetadata()["Exif.Image.Software"] = std::string(software.toLatin1().constData());
+            }
         }
 
         // set program info into XMP tags.
@@ -96,11 +98,11 @@ bool MetaEngine::setItemProgramId(const QString& program, const QString& version
 
         return true;
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot set Program identity into image using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot set Program identity into image with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -224,11 +226,11 @@ QSize MetaEngine::getItemDimensions() const
 #endif // _XMP_SUPPORT_
 
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot parse image dimensions tag using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot parse image dimensions tag with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -264,11 +266,11 @@ bool MetaEngine::setItemDimensions(const QSize& size) const
 
         return true;
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot set image dimensions using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot set image dimensions with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -322,15 +324,19 @@ MetaEngine::ImageOrientation MetaEngine::getItemOrientation() const
 
             //qCDebug(DIGIKAM_METAENGINE_LOG) << "Orientation => Exif.MinoltaCs7D.Rotation =>" << (int)orientation;
 
-            switch(orientation)
+            switch (orientation)
             {
                 case 76:
+                {
                     imageOrient = ORIENTATION_ROT_90;
                     break;
+                }
 
                 case 82:
+                {
                     imageOrient = ORIENTATION_ROT_270;
                     break;
+                }
             }
 
             return imageOrient;
@@ -345,15 +351,19 @@ MetaEngine::ImageOrientation MetaEngine::getItemOrientation() const
 
             //qCDebug(DIGIKAM_METAENGINE_LOG) << "Orientation => Exif.MinoltaCs5D.Rotation =>" << (int)orientation;
 
-            switch(orientation)
+            switch (orientation)
             {
                 case 76:
+                {
                     imageOrient = ORIENTATION_ROT_90;
                     break;
+                }
 
                 case 82:
+                {
                     imageOrient = ORIENTATION_ROT_270;
                     break;
+                }
             }
 
             return imageOrient;
@@ -374,11 +384,11 @@ MetaEngine::ImageOrientation MetaEngine::getItemOrientation() const
         }
 
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot parse Exif Orientation tag using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot parse Exif Orientation tag with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -448,11 +458,11 @@ bool MetaEngine::setItemOrientation(ImageOrientation orientation) const
 
         return true;
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot set Exif Orientation tag using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot set Exif Orientation tag with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -499,7 +509,7 @@ MetaEngine::ImageColorWorkSpace MetaEngine::getItemColorWorkSpace() const
 
             if (!interopIndex.isNull())
             {
-                if (interopIndex == QLatin1String("R03"))
+                if      (interopIndex == QLatin1String("R03"))
                 {
                     return WORKSPACE_ADOBERGB;
                 }
@@ -520,7 +530,7 @@ MetaEngine::ImageColorWorkSpace MetaEngine::getItemColorWorkSpace() const
 
         if (getExifTagLong("Exif.Nikon3.ColorSpace", nikonColorSpace))
         {
-            if (nikonColorSpace == 1)
+            if      (nikonColorSpace == 1)
             {
                 return WORKSPACE_SRGB;
             }
@@ -544,7 +554,7 @@ MetaEngine::ImageColorWorkSpace MetaEngine::getItemColorWorkSpace() const
 
         if (getExifTagLong("Exif.Canon.ColorSpace", canonColorSpace))
         {
-            if (canonColorSpace == 1)
+            if      (canonColorSpace == 1)
             {
                 return WORKSPACE_SRGB;
             }
@@ -586,11 +596,11 @@ bool MetaEngine::setItemColorWorkSpace(ImageColorWorkSpace workspace) const
 
         return true;
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot set Exif color workspace tag using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot set Exif color workspace tag with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -934,7 +944,7 @@ QDateTime MetaEngine::getItemDateTime() const
 
             for (it = dateMap.constBegin() ; it != dateMap.constEnd() ; ++it)
             {
-                if (!it.key().isValid())
+                if      (!it.key().isValid())
                 {
                     continue;
                 }
@@ -953,11 +963,11 @@ QDateTime MetaEngine::getItemDateTime() const
             }
         }
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot parse Exif date & time tag using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot parse Exif date & time tag with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -968,7 +978,9 @@ QDateTime MetaEngine::getItemDateTime() const
 bool MetaEngine::setImageDateTime(const QDateTime& dateTime, bool setDateTimeDigitized) const
 {
     if (!dateTime.isValid())
+    {
         return false;
+    }
 
     QMutexLocker lock(&s_metaEngineMutex);
 
@@ -986,7 +998,9 @@ bool MetaEngine::setImageDateTime(const QDateTime& dateTime, bool setDateTimeDig
         d->exifMetadata()["Exif.Photo.DateTimeOriginal"] = exifdatetime;
 
         if (setDateTimeDigitized)
+        {
             d->exifMetadata()["Exif.Photo.DateTimeDigitized"] = exifdatetime;
+        }
 
 #ifdef _XMP_SUPPORT_
 
@@ -1002,14 +1016,26 @@ bool MetaEngine::setImageDateTime(const QDateTime& dateTime, bool setDateTimeDig
         d->xmpMetadata().add(Exiv2::XmpKey("Xmp.xmp.CreateDate"),         xmpTxtVal.get());
         d->xmpMetadata().add(Exiv2::XmpKey("Xmp.xmp.MetadataDate"),       xmpTxtVal.get());
         d->xmpMetadata().add(Exiv2::XmpKey("Xmp.xmp.ModifyDate"),         xmpTxtVal.get());
-        d->xmpMetadata().add(Exiv2::XmpKey("Xmp.video.DateTimeOriginal"), xmpTxtVal.get());
-        d->xmpMetadata().add(Exiv2::XmpKey("Xmp.video.DateUTC"),          xmpTxtVal.get());
-        d->xmpMetadata().add(Exiv2::XmpKey("Xmp.video.ModificationDate"), xmpTxtVal.get());
 
         if (setDateTimeDigitized)
         {
             d->xmpMetadata().add(Exiv2::XmpKey("Xmp.exif.DateTimeDigitized"),  xmpTxtVal.get());
-            d->xmpMetadata().add(Exiv2::XmpKey("Xmp.video.DateTimeDigitized"), xmpTxtVal.get());
+        }
+
+        // We call this function from the FFmpeg parser and we don't have a filename yet.
+        // Check getFilePath() for empty.
+
+        if (getFilePath().isEmpty() ||
+            QMimeDatabase().mimeTypeForFile(getFilePath()).name().startsWith(QLatin1String("video/")))
+        {
+            d->xmpMetadata().add(Exiv2::XmpKey("Xmp.video.DateTimeOriginal"), xmpTxtVal.get());
+            d->xmpMetadata().add(Exiv2::XmpKey("Xmp.video.DateUTC"),          xmpTxtVal.get());
+            d->xmpMetadata().add(Exiv2::XmpKey("Xmp.video.ModificationDate"), xmpTxtVal.get());
+
+            if (setDateTimeDigitized)
+            {
+                d->xmpMetadata().add(Exiv2::XmpKey("Xmp.video.DateTimeDigitized"), xmpTxtVal.get());
+            }
         }
 
         // Tag not updated:
@@ -1033,11 +1059,11 @@ bool MetaEngine::setImageDateTime(const QDateTime& dateTime, bool setDateTimeDig
 
         return true;
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot set Date & Time into image using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot set Date & Time into image with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -1164,7 +1190,7 @@ QDateTime MetaEngine::getDigitizationDateTime(bool fallbackToCreationTime) const
 
             for (it = dateMap.constBegin() ; it != dateMap.constEnd() ; ++it)
             {
-                if (!it.key().isValid())
+                if      (!it.key().isValid())
                 {
                     continue;
                 }
@@ -1183,19 +1209,23 @@ QDateTime MetaEngine::getDigitizationDateTime(bool fallbackToCreationTime) const
         }
 
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot parse Exif digitization date & time tag using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot parse Exif digitization date & time tag with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
 
     if (fallbackToCreationTime)
+    {
         return getItemDateTime();
+    }
     else
+    {
         return QDateTime();
+    }
 }
 
 bool MetaEngine::getItemPreview(QImage& preview) const
@@ -1218,11 +1248,11 @@ bool MetaEngine::getItemPreview(QImage& preview) const
 
         // TODO : Added here Makernotes preview extraction when Exiv2 will be fixed for that.
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot get image preview using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot get image preview with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -1269,11 +1299,11 @@ bool MetaEngine::setItemPreview(const QImage& preview) const
 
         return true;
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot get image preview using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot get image preview with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }

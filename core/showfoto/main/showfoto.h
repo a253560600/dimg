@@ -40,14 +40,14 @@
 namespace ShowFoto
 {
 
-class ShowFoto : public Digikam::EditorWindow
+class Showfoto : public Digikam::EditorWindow
 {
     Q_OBJECT
 
 public:
 
-    explicit ShowFoto(const QList<QUrl>& urlList, QWidget* const parent = nullptr);
-    ~ShowFoto()                                             override;
+    explicit Showfoto(const QList<QUrl>& urlList, QWidget* const parent = nullptr);
+    ~Showfoto()                                             override;
 
 public:
 
@@ -94,6 +94,8 @@ private Q_SLOTS:
     void slotOpenUrl(const ShowfotoItemInfo& info);
     void slotDroppedUrls(const QList<QUrl>& droppedUrls,
                          bool dropped);
+    void slotRemoveImageFromAlbum(const QUrl& url);
+
     void slotDeleteCurrentItem()                            override;
 
     void slotChanged()                                      override;
@@ -135,6 +137,7 @@ private:
 private Q_SLOTS:
 
     void slotSetupMetadataFilters(int);
+    void slotSetupExifTool();
 
 // -- Internal setup methods implemented in showfoto_setup.cpp ----------------------------------------
 

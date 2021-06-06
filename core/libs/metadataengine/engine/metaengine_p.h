@@ -46,6 +46,7 @@
 #include <QFileInfo>
 #include <QSharedData>
 #include <QMutexLocker>
+#include <QMimeDatabase>
 
 // Exiv2 includes -------------------------------------------------------
 
@@ -93,6 +94,10 @@
 #   define AutoPtr UniquePtr
 #endif
 
+#if EXIV2_TEST_VERSION(0,27,4)
+#   include <exiv2/bmffimage.hpp>
+#endif
+
 // With exiv2 > 0.20.0, all makernote header files have been removed to increase binary compatibility.
 // See Exiv2 bugzilla entry dev.exiv2.org/issues/719
 // and wiki topic           dev.exiv2.org/boards/3/topics/583
@@ -110,7 +115,8 @@
 namespace Digikam
 {
 
-extern QMutex s_metaEngineMutex;
+extern QMutex s_metaEngineMutex;            ///< Mutex to fix no re-entrancy from Exiv2.
+extern bool   s_metaEngineSupportBmff;      ///< Flag for Exiv2 Base Media File Format support.
 
 // --------------------------------------------------------------------------
 
@@ -152,6 +158,8 @@ public:
     Exiv2::IptcData&       iptcMetadata();
     std::string&           itemComments();
 
+public:
+
 #ifdef _XMP_SUPPORT_
 
     const Exiv2::XmpData&  xmpMetadata()                                          const;
@@ -160,6 +168,8 @@ public:
     void loadSidecarData(Exiv2::Image::AutoPtr xmpsidecar);
 
 #endif
+
+public:
 
     /**
      * Helper method to decode IPTC tag string contents following characters encoding preset.

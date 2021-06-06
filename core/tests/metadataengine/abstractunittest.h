@@ -27,15 +27,21 @@
 // Qt includes
 
 #include <QObject>
-#include <QDebug>
 #include <QDir>
 #include <QTest>
 #include <QString>
 
 // Local includes
 
+#include "digikam_config.h"
+#include "digikam_debug.h"
 #include "dmetadata.h"
 #include "wstoolutils.h"
+
+#ifdef HAVE_IMAGE_MAGICK
+#   include <Magick++.h>
+using namespace Magick;
+#endif
 
 using namespace Digikam;
 
@@ -46,7 +52,7 @@ class AbstractUnitTest : public QObject
 public:
 
     AbstractUnitTest(QObject* const parent = nullptr)
-        : QObject(parent),
+        : QObject              (parent),
           m_originalImageFolder(QFINDTESTDATA("data/")) ///< Original files come with source code.
     {
     }
@@ -57,8 +63,16 @@ protected Q_SLOTS:
 
     virtual void initTestCase()
     {
+
+#ifdef HAVE_IMAGE_MAGICK
+
+        qCDebug(DIGIKAM_TESTS_LOG) << "Init ImageMagick";
+        InitializeMagick(nullptr);
+
+#endif
+
         MetaEngine::initializeExiv2();
-        qDebug() << "Using Exiv2 Version:" << MetaEngine::Exiv2Version();
+        qCDebug(DIGIKAM_TESTS_LOG) << "Using Exiv2 Version:" << MetaEngine::Exiv2Version();
         m_tempPath = QString::fromLatin1(QTest::currentAppName());
         m_tempPath.replace(QLatin1String("./"), QString());
     }
@@ -75,13 +89,22 @@ protected Q_SLOTS:
     virtual void cleanup()
     {
         WSToolUtils::removeTemporaryDir(m_tempPath.toLatin1().data());
+
+#ifdef HAVE_IMAGE_MAGICK
+#   if MagickLibVersion >= 0x693
+
+        qCDebug(DIGIKAM_TESTS_LOG) << "Terminate ImageMagick";
+        TerminateMagick();
+
+#   endif
+#endif
+
     }
 
     /// Re-implemented from QTest framework
 
     virtual void cleanupTestCase()
     {
-        MetaEngine::cleanupExiv2();
     }
 
 protected:

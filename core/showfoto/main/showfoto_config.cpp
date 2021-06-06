@@ -26,19 +26,19 @@
 namespace ShowFoto
 {
 
-void ShowFoto::slotSetup()
+void Showfoto::slotSetup()
 {
     setup(false);
 }
 
-void ShowFoto::slotSetupICC()
+void Showfoto::slotSetupICC()
 {
     setup(true);
 }
 
-bool ShowFoto::setup(bool iccSetupPage)
+bool Showfoto::setup(bool iccSetupPage)
 {
-    QPointer<Setup> setup = new Setup(this, iccSetupPage ? Setup::ICCPage : Setup::LastPageUsed);
+    QPointer<ShowfotoSetup> setup = new ShowfotoSetup(this, iccSetupPage ? ShowfotoSetup::ICCPage : ShowfotoSetup::LastPageUsed);
 
     if (setup->exec() != QDialog::Accepted)
     {
@@ -61,7 +61,7 @@ bool ShowFoto::setup(bool iccSetupPage)
     return true;
 }
 
-void ShowFoto::readSettings()
+void Showfoto::readSettings()
 {
     d->settings        = ShowfotoSettings::instance();
 
@@ -83,7 +83,7 @@ void ShowFoto::readSettings()
     d->thumbBar->setToolTipEnabled(d->settings->getShowToolTip());
 }
 
-void ShowFoto::saveSettings()
+void Showfoto::saveSettings()
 {
     saveStandardSettings();
 
@@ -94,7 +94,7 @@ void ShowFoto::saveSettings()
     d->rightSideBar->saveState();
 }
 
-void ShowFoto::applySettings()
+void Showfoto::applySettings()
 {
     applyStandardSettings();
 
@@ -133,13 +133,13 @@ void ShowFoto::applySettings()
 
     switch (d->settings->getSortRole())
     {
-        case SetupMisc::SortByName:
+        case ShowfotoSetupMisc::SortByName:
         {
             d->filterModel->setSortRole(ShowfotoItemSortSettings::SortByFileName);
             break;
         }
 
-        case SetupMisc::SortByFileSize:
+        case ShowfotoSetupMisc::SortByFileSize:
         {
             d->filterModel->setSortRole(ShowfotoItemSortSettings::SortByFileSize);
             break;

@@ -130,10 +130,10 @@ make MXE_TARGETS=$MXE_BUILD_TARGETS \
      qtbase \
      qttranslations \
      qtimageformats \
-     qtwebkit \
      qttools \
      qtwinextras \
      qtscript \
+     qtwebkit \
      x265 \
      ffmpeg \
      openal \

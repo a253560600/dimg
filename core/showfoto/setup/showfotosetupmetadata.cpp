@@ -48,33 +48,36 @@
 #include "metadatapanel.h"
 #include "metaenginesettings.h"
 #include "dactivelabel.h"
+#include "exiftoolconfpanel.h"
 
 namespace ShowFoto
 {
 
-class Q_DECL_HIDDEN SetupMetadata::Private
+class Q_DECL_HIDDEN ShowfotoSetupMetadata::Private
 {
 public:
 
     explicit Private()
-      : exifRotateBox(nullptr),
+      : exifRotateBox        (nullptr),
         exifSetOrientationBox(nullptr),
-        tab(nullptr),
-        tagsCfgPanel(nullptr)
+        tab                  (nullptr),
+        tagsCfgPanel         (nullptr),
+        exifToolView         (nullptr)
     {
     }
 
-    QCheckBox*              exifRotateBox;
-    QCheckBox*              exifSetOrientationBox;
+    QCheckBox*                  exifRotateBox;
+    QCheckBox*                  exifSetOrientationBox;
 
-    QTabWidget*             tab;
+    QTabWidget*                 tab;
 
-    Digikam::MetadataPanel* tagsCfgPanel;
+    Digikam::MetadataPanel*     tagsCfgPanel;
+    Digikam::ExifToolConfPanel* exifToolView;
 };
 
-SetupMetadata::SetupMetadata(QWidget* const parent )
+ShowfotoSetupMetadata::ShowfotoSetupMetadata(QWidget* const parent)
     : QScrollArea(parent),
-      d(new Private)
+      d          (new Private)
 {
     d->tab                        = new QTabWidget(viewport());
     setWidget(d->tab);
@@ -95,9 +98,9 @@ SetupMetadata::SetupMetadata(QWidget* const parent )
     rotationAdvIcon->setPixmap(QIcon::fromTheme(QLatin1String("configure")).pixmap(32));
 
     d->exifRotateBox         = new QCheckBox(rotationAdvGroup);
-    d->exifRotateBox->setText(i18n("Show images/thumbnails &rotated according to orientation tag."));
+    d->exifRotateBox->setText(i18nc("@option:check", "Show images/thumbnails &rotated according to orientation tag."));
     d->exifSetOrientationBox = new QCheckBox(rotationAdvGroup);
-    d->exifSetOrientationBox->setText(i18n("Set orientation tag to normal after rotate/flip."));
+    d->exifSetOrientationBox->setText(i18nc("@option:check", "Set orientation tag to normal after rotate/flip."));
 
     rotationAdvLayout->addWidget(rotationAdvIcon,          0, 0, 1, 1);
     rotationAdvLayout->addWidget(rotationAdvExpl,          0, 1, 1, 1);
@@ -116,25 +119,25 @@ SetupMetadata::SetupMetadata(QWidget* const parent )
                                                                             QStandardPaths::locate(QStandardPaths::GenericDataLocation,
                                                                                                    QLatin1String("digikam/data/logo-exiv2.png")),
                                                                             box);
-    exiv2LogoLabel->setWhatsThis(i18n("Visit Exiv2 project website"));
+    exiv2LogoLabel->setWhatsThis(i18nc("@info:whatsthis", "Visit Exiv2 project website"));
 
     QLabel* const explanation = new QLabel(box);
     explanation->setOpenExternalLinks(true);
     explanation->setWordWrap(true);
     QString txt;
 
-    txt.append(i18n("<p><a href='https://en.wikipedia.org/wiki/Exif'>Exif</a> - "
-                    "a standard used by most digital cameras today to store technical "
-                    "information (like aperture and shutter speed) about an image.</p>"));
+    txt.append(QString::fromUtf8("<p><a href='https://en.wikipedia.org/wiki/Exif'>Exif</a> - %1</p>")
+               .arg(i18nc("@info", "a standard used by most digital cameras today to store technical "
+                          "information (like aperture and shutter speed) about an image.")));
 
-    txt.append(i18n("<p><a href='https://en.wikipedia.org/wiki/IPTC_Information_Interchange_Model'>IPTC</a> - "
-                    "an older standard used in digital photography to store "
-                    "photographer information in images.</p>"));
+    txt.append(QString::fromUtf8("<p><a href='https://en.wikipedia.org/wiki/IPTC_Information_Interchange_Model'>IPTC</a> - %1</p>")
+               .arg(i18nc("@info", "an older standard used in digital photography to store "
+                          "photographer information in images.")));
 
     if (Digikam::MetaEngine::supportXmp())
     {
-        txt.append(i18n("<p><a href='https://en.wikipedia.org/wiki/Extensible_Metadata_Platform'>XMP</a> - "
-                        "a new standard used in digital photography, designed to replace IPTC.</p>"));
+        txt.append(QString::fromUtf8("<p><a href='https://en.wikipedia.org/wiki/Extensible_Metadata_Platform'>XMP</a> - %1</p>")
+                   .arg(i18nc("@info", "a new standard used in digital photography, designed to replace IPTC.")));
     }
 
     explanation->setText(txt);
@@ -155,7 +158,7 @@ SetupMetadata::SetupMetadata(QWidget* const parent )
     mainLayout->addWidget(box);
     mainLayout->addStretch();
 
-    d->tab->insertTab(Behavior, panel, i18n("Behavior"));
+    d->tab->insertTab(Behavior, panel, i18nc("@title:tab", "Behavior"));
 
     // --------------------------------------------------------
 
@@ -163,15 +166,20 @@ SetupMetadata::SetupMetadata(QWidget* const parent )
 
     // --------------------------------------------------------
 
+    d->exifToolView = new Digikam::ExifToolConfPanel(d->tab);
+    d->tab->insertTab(ExifTool, d->exifToolView, i18nc("@title:tab", "ExifTool"));
+
+    // --------------------------------------------------------
+
     readSettings();
 }
 
-SetupMetadata::~SetupMetadata()
+ShowfotoSetupMetadata::~ShowfotoSetupMetadata()
 {
     delete d;
 }
 
-void SetupMetadata::applySettings()
+void ShowfotoSetupMetadata::applySettings()
 {
     Digikam::MetaEngineSettings* const mSettings = Digikam::MetaEngineSettings::instance();
 
@@ -184,12 +192,13 @@ void SetupMetadata::applySettings()
 
     set.exifRotate         = d->exifRotateBox->isChecked();
     set.exifSetOrientation = d->exifSetOrientationBox->isChecked();
+    set.exifToolPath       = d->exifToolView->exifToolDirectory();
     mSettings->setSettings(set);
 
     d->tagsCfgPanel->applySettings();
 }
 
-void SetupMetadata::readSettings()
+void ShowfotoSetupMetadata::readSettings()
 {
     Digikam::MetaEngineSettings* const mSettings = Digikam::MetaEngineSettings::instance();
 
@@ -202,9 +211,10 @@ void SetupMetadata::readSettings()
 
     d->exifRotateBox->setChecked(set.exifRotate);
     d->exifSetOrientationBox->setChecked(set.exifSetOrientation);
+    d->exifToolView->setExifToolDirectory(set.exifToolPath);
 }
 
-void SetupMetadata::setActiveTab(MetadataTab tab)
+void ShowfotoSetupMetadata::setActiveTab(MetadataTab tab)
 {
     d->tab->setCurrentIndex(tab);
 }

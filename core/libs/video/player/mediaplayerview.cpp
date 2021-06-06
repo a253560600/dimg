@@ -174,7 +174,8 @@ public:
         volume          (nullptr),
         tlabel          (nullptr),
         videoOrientation(0),
-        capturePosition(0)
+        capturePosition (0),
+        sliderTime      (0)
     {
     }
 
@@ -200,8 +201,10 @@ public:
     QLabel*              tlabel;
     QUrl                 currentItem;
 
+
     int                  videoOrientation;
     qint64               capturePosition;
+    qint64               sliderTime;
 };
 
 MediaPlayerView::MediaPlayerView(QWidget* const parent)
@@ -244,7 +247,7 @@ MediaPlayerView::MediaPlayerView(QWidget* const parent)
 
     DHBox* const hbox = new DHBox(this);
     d->slider         = new QSlider(Qt::Horizontal, hbox);
-    d->slider->setStyle(new PlayerVideoStyle(d->slider->style()));
+    d->slider->setStyle(new PlayerVideoStyle());
     d->slider->setRange(0, 0);
     d->tlabel         = new QLabel(hbox);
     d->tlabel->setText(QLatin1String("00:00:00 / 00:00:00"));
@@ -334,7 +337,8 @@ MediaPlayerView::MediaPlayerView(QWidget* const parent)
             this, SLOT(slotMediaStatusChanged(QtAV::MediaStatus)));
 
     connect(d->player, SIGNAL(positionChanged(qint64)),
-            this, SLOT(slotPositionChanged(qint64)));
+            this, SLOT(slotPositionChanged(qint64)),
+            Qt::QueuedConnection);
 
     connect(d->player, SIGNAL(durationChanged(qint64)),
             this, SLOT(slotDurationChanged(qint64)));
@@ -631,6 +635,14 @@ void MediaPlayerView::setCurrentItem(const QUrl& url, bool hasPrevious, bool has
 
 void MediaPlayerView::slotPositionChanged(qint64 position)
 {
+    if ((d->sliderTime < position)       &&
+        ((d->sliderTime + 100) > position))
+    {
+        return;
+    }
+
+    d->sliderTime = position;
+
     if (!d->slider->isSliderDown())
     {
         d->slider->blockSignals(true);

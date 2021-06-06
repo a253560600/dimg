@@ -89,6 +89,11 @@ PhotoInfoContainer DMetadata::getPhotographInformation() const
 
         if (photoInfo.aperture.isEmpty())
         {
+            photoInfo.aperture = getExifTagString("Exif.Image.FNumber");
+        }
+
+        if (photoInfo.aperture.isEmpty())
+        {
             photoInfo.aperture = getExifTagString("Exif.Photo.ApertureValue");
         }
 
@@ -105,6 +110,11 @@ PhotoInfoContainer DMetadata::getPhotographInformation() const
         // -----------------------------------------------------------------------------------
 
         photoInfo.exposureTime = getExifTagString("Exif.Photo.ExposureTime");
+
+        if (photoInfo.exposureTime.isEmpty())
+        {
+            photoInfo.exposureTime = getExifTagString("Exif.Image.ExposureTime");
+        }
 
         if (photoInfo.exposureTime.isEmpty())
         {
@@ -152,6 +162,11 @@ PhotoInfoContainer DMetadata::getPhotographInformation() const
         // -----------------------------------------------------------------------------------
 
         photoInfo.focalLength     = getExifTagString("Exif.Photo.FocalLength");
+
+        if (photoInfo.focalLength.isEmpty())
+        {
+            photoInfo.focalLength = getXmpTagString("Exif.Image.FocalLength");
+        }
 
         if (photoInfo.focalLength.isEmpty())
         {
@@ -243,29 +258,41 @@ QString DMetadata::getLensDescription() const
 
     // In first, try to get Lens information from makernotes.
 
-    lensExifTags.append(QLatin1String("Exif.CanonCs.LensType"));      // Canon Cameras Makernote.
-    lensExifTags.append(QLatin1String("Exif.CanonCs.Lens"));          // Canon Cameras Makernote.
-    lensExifTags.append(QLatin1String("Exif.Canon.0x0095"));          // Alternative Canon Cameras Makernote.
-    lensExifTags.append(QLatin1String("Exif.NikonLd1.LensIDNumber")); // Nikon Cameras Makernote.
-    lensExifTags.append(QLatin1String("Exif.NikonLd2.LensIDNumber")); // Nikon Cameras Makernote.
-    lensExifTags.append(QLatin1String("Exif.NikonLd3.LensIDNumber")); // Nikon Cameras Makernote.
-    lensExifTags.append(QLatin1String("Exif.Minolta.LensID"));        // Minolta Cameras Makernote.
-    lensExifTags.append(QLatin1String("Exif.Sony1.LensID"));          // Sony Cameras Makernote.
-    lensExifTags.append(QLatin1String("Exif.Sony2.LensID"));          // Sony Cameras Makernote.
-    lensExifTags.append(QLatin1String("Exif.SonyMinolta.LensID"));    // Sony Cameras Makernote.
-    lensExifTags.append(QLatin1String("Exif.Pentax.LensType"));       // Pentax Cameras Makernote.
-    lensExifTags.append(QLatin1String("Exif.PentaxDng.LensType"));    // Pentax Cameras Makernote.
-    lensExifTags.append(QLatin1String("Exif.Panasonic.0x0051"));      // Panasonic Cameras Makernote.
-    lensExifTags.append(QLatin1String("Exif.Panasonic.0x0310"));      // Panasonic Cameras Makernote.
-    lensExifTags.append(QLatin1String("Exif.Sigma.LensRange"));       // Sigma Cameras Makernote.
-    lensExifTags.append(QLatin1String("Exif.Samsung2.LensType"));     // Samsung Cameras Makernote.
-    lensExifTags.append(QLatin1String("Exif.Photo.0xFDEA"));          // Non-standard Exif tag set by Camera Raw.
-    lensExifTags.append(QLatin1String("Exif.OlympusEq.LensType"));    // Olympus Cameras Makernote.
-    lensExifTags.append(QLatin1String("Exif.OlympusEq.LensModel"));   // Olympus Cameras Makernote.
+    lensExifTags.append(QLatin1String("Exif.CanonCs.LensType"));      ///< Canon Cameras Makernote.
+    lensExifTags.append(QLatin1String("Exif.CanonCs.Lens"));          ///< Canon Cameras Makernote.
+    lensExifTags.append(QLatin1String("Exif.Canon.0x0095"));          ///< Alternative Canon Cameras Makernote.
+    lensExifTags.append(QLatin1String("Exif.NikonLd1.LensIDNumber")); ///< Nikon Cameras Makernote.
+    lensExifTags.append(QLatin1String("Exif.NikonLd2.LensIDNumber")); ///< Nikon Cameras Makernote.
+    lensExifTags.append(QLatin1String("Exif.NikonLd3.LensIDNumber")); ///< Nikon Cameras Makernote.
+    lensExifTags.append(QLatin1String("Exif.Minolta.LensID"));        ///< Minolta Cameras Makernote.
+    lensExifTags.append(QLatin1String("Exif.Sony1.LensID"));          ///< Sony Cameras Makernote.
+    lensExifTags.append(QLatin1String("Exif.Sony2.LensID"));          ///< Sony Cameras Makernote.
+    lensExifTags.append(QLatin1String("Exif.SonyMinolta.LensID"));    ///< Sony Cameras Makernote.
+    lensExifTags.append(QLatin1String("Exif.Pentax.LensType"));       ///< Pentax Cameras Makernote.
+    lensExifTags.append(QLatin1String("Exif.PentaxDng.LensType"));    ///< Pentax Cameras Makernote.
+    lensExifTags.append(QLatin1String("Exif.Panasonic.0x0051"));      ///< Panasonic Cameras Makernote.
+    lensExifTags.append(QLatin1String("Exif.Panasonic.0x0310"));      ///< Panasonic Cameras Makernote.
+    lensExifTags.append(QLatin1String("Exif.Sigma.LensRange"));       ///< Sigma Cameras Makernote.
+    lensExifTags.append(QLatin1String("Exif.Samsung2.LensType"));     ///< Samsung Cameras Makernote.
+    lensExifTags.append(QLatin1String("Exif.Photo.0xFDEA"));          ///< Non-standard Exif tag set by Camera Raw.
+    lensExifTags.append(QLatin1String("Exif.OlympusEq.LensType"));    ///< Olympus Cameras Makernote.
+    lensExifTags.append(QLatin1String("Exif.OlympusEq.LensModel"));   ///< Olympus Cameras Makernote.
 
     // Check Makernotes first.
 
-    lensExifTags.append(QLatin1String("Exif.Photo.LensModel"));       // Sony Cameras Makernote and others.
+    // Sony Cameras Makernote and others.
+
+    QString make      = getExifTagString("Exif.Image.Make");
+    QString lensModel = QLatin1String("Exif.Photo.LensModel");
+
+    if (make.contains(QLatin1String("SONY"), Qt::CaseInsensitive))
+    {
+        lensExifTags.prepend(lensModel);
+    }
+    else
+    {
+        lensExifTags.append(lensModel);
+    }
 
     // TODO : add Fuji camera Makernotes.
 
@@ -282,7 +309,6 @@ QString DMetadata::getLensDescription() const
         if (!lens.isEmpty()                        &&
             (lens != QLatin1String("----"))        &&
             (lens != QLatin1String("65535"))       &&
-            (lens != QLatin1String("Manual lens")) &&
             !(lens.startsWith(QLatin1Char('('))    &&
               lens.endsWith(QLatin1Char(')'))
              )
@@ -521,7 +547,7 @@ double DMetadata::apexShutterSpeedToExposureTime(double shutterSpeed)
     {
         return 0.0005;    // 1/2000
     }
-    // additions by me
+    // supplemental rules
     else if (shutterSpeed == 12.0)
     {
         return 0.00025;    // 1/4000

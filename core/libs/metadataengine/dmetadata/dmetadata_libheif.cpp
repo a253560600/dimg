@@ -6,7 +6,7 @@
  * Date        : 2019-09-26
  * Description : item metadata interface - libheif helpers.
  *
- * Copyright (C) 2020 by Gilles Caulier <caulier dot gilles at gmail dot com>
+ * Copyright (C) 2020-2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -30,6 +30,7 @@
 #include <QByteArray>
 #include <QTextStream>
 #include <QDataStream>
+#include <QFileInfo>
 #include <qplatformdefs.h>
 
 // Local includes
@@ -170,6 +171,18 @@ void s_readHEICMetadata(struct heif_context* const heif_context, heif_item_id im
 
 bool DMetadata::loadUsingLibheif(const QString& filePath)
 {
+    QFileInfo fileInfo(filePath);
+    QString ext = fileInfo.suffix().toUpper();
+
+    if (
+        !fileInfo.exists() || ext.isEmpty() ||
+        (ext != QLatin1String("HEIF"))      ||
+        (ext != QLatin1String("HEIC"))
+       )
+    {
+        return false;
+    }
+
     FILE* file = fopen(QFile::encodeName(filePath).constData(), "rb");
 
 #ifdef Q_OS_WIN
@@ -308,6 +321,5 @@ bool DMetadata::loadUsingLibheif(const QString& filePath)
 
     return ret;
 }
-
 
 } // namespace Digikam

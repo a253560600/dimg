@@ -59,7 +59,7 @@ class DIGIKAM_EXPORT PanIconFrame : public QFrame
 
 public:
 
-    explicit PanIconFrame(QWidget* const parent=nullptr);
+    explicit PanIconFrame(QWidget* const parent = nullptr);
     ~PanIconFrame() override;
 
     /**
@@ -74,7 +74,7 @@ public:
     /**
      * Open the popup window at position pos.
      */
-    void popup(const QPoint & pos);
+    void popup(const QPoint& pos);
 
     /**
      * Execute the popup window.
@@ -128,7 +128,7 @@ class DIGIKAM_EXPORT PanIconWidget : public QWidget
 
 public:
 
-    explicit PanIconWidget(QWidget* const parent=nullptr);
+    explicit PanIconWidget(QWidget* const parent = nullptr);
     ~PanIconWidget()                        override;
 
     static QToolButton* button();

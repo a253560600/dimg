@@ -66,6 +66,7 @@ AlbumManager::Private::Private()
       dbFakeConnection        (false),
       showOnlyAvailableAlbums (false),
       longTimeMessageBoxResult(-1),
+      askMergeMessageBoxResult(-1),
       albumListJob            (nullptr),
       dateListJob             (nullptr),
       tagListJob              (nullptr),
@@ -101,8 +102,8 @@ QString AlbumManager::Private::labelForAlbumRootAlbum(const CollectionLocation& 
 
 // -----------------------------------------------------------------------------------
 
-ChangingDB::ChangingDB(AlbumManager::Private* const d)
-    : d(d)
+ChangingDB::ChangingDB(AlbumManager::Private* const dd)
+    : d(dd)
 {
     d->changingDB = true;
 }

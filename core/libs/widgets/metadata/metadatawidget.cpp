@@ -212,7 +212,7 @@ void MetadataWidget::setup()
 
 void MetadataWidget::slotFilterChanged(QAction* action)
 {
-    if (action == d->settingsAction)
+    if      (action == d->settingsAction)
     {
         emit signalSetupMetadataFilters();
     }
@@ -466,18 +466,21 @@ QUrl MetadataWidget::saveMetadataToFile(const QString& caption, const QString& f
     fileSaveDialog->selectFile(d->fileName);
     fileSaveDialog->setNameFilter(fileFilter);
 
-    QList<QUrl> urls;
+    fileSaveDialog->exec();
 
     // Check for cancel.
 
-    if (fileSaveDialog->exec() == QDialog::Accepted)
+    if (!fileSaveDialog || fileSaveDialog->selectedUrls().isEmpty())
     {
-        urls = fileSaveDialog->selectedUrls();
+        delete fileSaveDialog;
+
+        return QUrl();
     }
 
+    QUrl url = fileSaveDialog->selectedUrls().first();
     delete fileSaveDialog;
 
-    return (!urls.isEmpty() ? urls[0] : QUrl());
+    return url;
 }
 
 void MetadataWidget::setMode(int mode)

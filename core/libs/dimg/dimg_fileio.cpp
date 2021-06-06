@@ -287,6 +287,7 @@ bool DImg::save(const QString& filePath, const QString& format, DImgLoaderObserv
     if (plug)
     {
         DImgLoader* const loader = plug->loader(&copyForSave);
+        copyForSave.setAttribute(QLatin1String("format"), frm);
         copyForSave.setAttribute(QLatin1String("savedFormat-isReadOnly"), loader->isReadOnly());
         bool ret                 = loader->save(filePath, observer);
         delete loader;
@@ -329,25 +330,30 @@ DImg::FORMAT DImg::fileFormat(const QString& filePath)
 QDateTime DImg::creationDateFromFilesystem(const QFileInfo& fileInfo) const
 {
     // creation date is not what it seems on Unix
+
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 10, 0))
+
     QDateTime ctime = fileInfo.birthTime();
+
 #else
+
     QDateTime ctime = fileInfo.created();
+
 #endif
 
     QDateTime mtime = fileInfo.lastModified();
 
-    if (ctime.isNull())
-    {
-        return mtime;
-    }
-
-    if (mtime.isNull())
+    if (ctime.isValid())
     {
         return ctime;
     }
 
-    return qMin(ctime, mtime);
+    if (mtime.isValid())
+    {
+        return mtime;
+    }
+
+    return QDateTime::currentDateTime();
 }
 
 } // namespace Digikam

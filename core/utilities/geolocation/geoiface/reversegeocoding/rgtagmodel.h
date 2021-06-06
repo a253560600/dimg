@@ -98,10 +98,10 @@ public Q_SLOTS:
 
     void slotSourceDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight);
     void slotSourceHeaderDataChanged(const Qt::Orientation orientation, int first, int last);
-    void slotColumnsAboutToBeInserted(const QModelIndex & parent, int start, int end);
-    void slotColumnsAboutToBeMoved(const QModelIndex & sourceParent, int sourceStart, int sourceEnd,
-                                   const QModelIndex & destinationParent, int destinationColumn);
-    void slotColumnsAboutToBeRemoved(const QModelIndex & parent, int start, int end);
+    void slotColumnsAboutToBeInserted(const QModelIndex& parent, int start, int end);
+    void slotColumnsAboutToBeMoved(const QModelIndex& sourceParent, int sourceStart, int sourceEnd,
+                                   const QModelIndex& destinationParent, int destinationColumn);
+    void slotColumnsAboutToBeRemoved(const QModelIndex& parent, int start, int end);
     void slotColumnsInserted();
     void slotColumnsMoved();
     void slotColumnsRemoved();
@@ -109,13 +109,17 @@ public Q_SLOTS:
     void slotLayoutChanged();
     void slotModelAboutToBeReset();
     void slotModelReset();
-    void slotRowsAboutToBeInserted(const QModelIndex & parent, int start, int end);
-    void slotRowsAboutToBeMoved(const QModelIndex & sourceParent, int sourceStart, int sourceEnd,
-                                const QModelIndex & destinationParent, int destinationRow);
-    void slotRowsAboutToBeRemoved(const QModelIndex & parent, int start, int end);
+    void slotRowsAboutToBeInserted(const QModelIndex& parent, int start, int end);
+    void slotRowsAboutToBeMoved(const QModelIndex& sourceParent, int sourceStart, int sourceEnd,
+                                const QModelIndex& destinationParent, int destinationRow);
+    void slotRowsAboutToBeRemoved(const QModelIndex& parent, int start, int end);
     void slotRowsInserted();
     void slotRowsMoved();
     void slotRowsRemoved();
+
+private:
+
+    QString translateSpacer(const QString& text)                                                    const;
 
 private:
 

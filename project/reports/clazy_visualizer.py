@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
-# Copyright (c) 2019 by Austin Hale, <ah at unc dot edu>
-# Copyright (c) 2020 by Gilles Caulier, <caulier dot gilles at gmail dot com>
+# Copyright (c) 2019      by Austin Hale, <ah at unc dot edu>
+# Copyright (c) 2020-2021 by Gilles Caulier, <caulier dot gilles at gmail dot com>
 #
 # Export Clazy static analyzer output to HTML reports.
 #
@@ -30,10 +30,11 @@ checks_list = ["[-Wclazy-assert-with-side-effects]",
                "[-Wclazy-qstring-varargs]",
                "[-Wclazy-qt-keywords]",
                "[-Wclazy-qt4-qstring-from-array]",
-               "[-Wclazy-qt6-qdir-fixes]",
                "[-Wclazy-qt6-qhash-signature]",
                "[-Wclazy-qt6-qlatin1char-to-u]",
                "[-Wclazy-qt6-qlatin1string-to-u]",
+               "[-Wclazy-qt6-qlatin1stringchar-to-u]",
+               "[-Wclazy-qt6-qdir-fixes]",
                "[-Wclazy-qvariant-template-instantiation]",
                "[-Wclazy-raw-environment-function]",
                "[-Wclazy-reserve-candidates]",

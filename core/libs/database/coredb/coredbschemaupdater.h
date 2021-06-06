@@ -106,9 +106,11 @@ private:
 
 private:
 
-    // Hidden copy constructor and assignment operator.
-    CoreDbSchemaUpdater(const CoreDbSchemaUpdater&);
-    CoreDbSchemaUpdater& operator=(const CoreDbSchemaUpdater&);
+    // Disable
+    CoreDbSchemaUpdater(const CoreDbSchemaUpdater&)            = delete;
+    CoreDbSchemaUpdater& operator=(const CoreDbSchemaUpdater&) = delete;
+
+private:
 
     class Private;
     Private* const d;

@@ -31,7 +31,6 @@
 // Local includes
 
 #include "digikam_debug.h"
-
 #include "opencvdnnfacedetector.h"
 
 namespace Digikam
@@ -229,7 +228,7 @@ QList<QRectF> FaceDetector::detectFaces(const QString& imagePath)
     {
         qCCritical(DIGIKAM_FACESENGINE_LOG) << "cv::Exception:" << e.what();
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_FACESENGINE_LOG) << "Default exception from OpenCV";
     }

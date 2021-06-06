@@ -187,10 +187,10 @@ public:
 public:
 
     explicit Private()
+      : state (Inactive),
+        active(true),
+        thread(nullptr)
     {
-        state  = Inactive;
-        thread = nullptr;
-        active = true;
     }
 
     void reset();

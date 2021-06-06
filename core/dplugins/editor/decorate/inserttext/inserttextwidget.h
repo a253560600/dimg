@@ -83,7 +83,7 @@ public:
 
 public:
 
-    explicit InsertTextWidget(int w, int h, QWidget* const parent=nullptr);
+    explicit InsertTextWidget(int w, int h, QWidget* const parent = nullptr);
     ~InsertTextWidget() override;
 
     ImageIface* imageIface() const;
@@ -103,11 +103,11 @@ public:
 
 protected:
 
-    void paintEvent(QPaintEvent*) override;
-    void resizeEvent(QResizeEvent*) override;
-    void mousePressEvent(QMouseEvent*) override;
-    void mouseReleaseEvent(QMouseEvent*) override;
-    void mouseMoveEvent(QMouseEvent*) override;
+    void paintEvent(QPaintEvent*)           override;
+    void resizeEvent(QResizeEvent*)         override;
+    void mousePressEvent(QMouseEvent*)      override;
+    void mouseReleaseEvent(QMouseEvent*)    override;
+    void mouseMoveEvent(QMouseEvent*)       override;
 
     void makePixmap();
     QRect composeImage(DImg* const image, QPainter* const destPainter,
@@ -115,7 +115,7 @@ protected:
                        QFont font, float pointSize, int textRotation, QColor textColor,
                        int textOpacity, int alignMode, const QString& textString,
                        bool transparentBackground, QColor backgroundColor,
-                       BorderMode borderMode, int borderWidth, int spacing, float fontScale=1.0f);
+                       BorderMode borderMode, int borderWidth, int spacing, float fontScale = 1.0f);
 
 private:
 

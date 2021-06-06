@@ -174,7 +174,7 @@ ItemIconView::ItemIconView(QWidget* const parent, DModelFactory* const modelColl
     // People Sidebar
 
     d->peopleSideBar       = new PeopleSideBarWidget(d->leftSideBar,
-                                                     d->modelCollection->getTagFacesModel(),
+                                                     d->modelCollection->getTagFaceModel(),
                                                      d->searchModificationHelper);
 
     connect(d->peopleSideBar, SIGNAL(requestFaceMode(bool)),
@@ -204,7 +204,8 @@ ItemIconView::ItemIconView(QWidget* const parent, DModelFactory* const modelColl
     // Tags Filter sidebar tab contents.
 
     d->filterWidget   = new FilterSideBarWidget(d->rightSideBar, d->modelCollection->getTagFilterModel());
-    d->rightSideBar->appendTab(d->filterWidget, QIcon::fromTheme(QLatin1String("view-filter")), i18nc("Filters as in Search type Filters", "Filters"));
+    d->rightSideBar->appendTab(d->filterWidget, QIcon::fromTheme(QLatin1String("view-filter")),
+                               i18nc("Filters as in Search type Filters", "Filters"));
 
     // Versions sidebar overlays
     d->rightSideBar->getFiltersHistoryTab()->addOpenAlbumAction(d->iconView->imageModel());
@@ -227,6 +228,12 @@ ItemIconView::ItemIconView(QWidget* const parent, DModelFactory* const modelColl
 
     connect(d->rightSideBar, SIGNAL(signalSetupMetadataFilters(int)),
             this, SLOT(slotSetupMetadataFilters(int)));
+
+    connect(d->rightSideBar, SIGNAL(signalSetupExifTool()),
+            this, SLOT(slotSetupExifTool()));
+
+    connect(d->iconView, SIGNAL(signalSeparationModeChanged(int)),
+            this, SIGNAL(signalSeparationModeChanged(int)));
 }
 
 ItemIconView::~ItemIconView()

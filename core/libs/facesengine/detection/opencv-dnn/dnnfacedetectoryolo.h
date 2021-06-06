@@ -43,17 +43,17 @@ class DNNFaceDetectorYOLO: public DNNFaceDetectorBase
 public:
 
     explicit DNNFaceDetectorYOLO();
-    ~DNNFaceDetectorYOLO()                                  override;
+    ~DNNFaceDetectorYOLO()                                        override;
 
     bool loadModels();
 
     void detectFaces(const cv::Mat& inputImage,
                      const cv::Size& paddedSize,
-                     std::vector<cv::Rect>& detectedBboxes) override;
+                     std::vector<cv::Rect>& detectedBboxes)       override;
 
 private:
 
-    std::vector<cv::String> getOutputsNames() const;
+    std::vector<cv::String> getOutputsNames()               const;
 
     void postprocess(const std::vector<cv::Mat>& outs,
                      const cv::Size& paddedSize,
@@ -61,9 +61,9 @@ private:
 
 private:
 
-    // Hidden copy constructor and assignment operator.
-    DNNFaceDetectorYOLO(const DNNFaceDetectorYOLO&);
-    DNNFaceDetectorYOLO& operator=(const DNNFaceDetectorYOLO&);
+    // Disable
+    DNNFaceDetectorYOLO(const DNNFaceDetectorYOLO&)            = delete;
+    DNNFaceDetectorYOLO& operator=(const DNNFaceDetectorYOLO&) = delete;
 };
 
 } // namespace Digikam

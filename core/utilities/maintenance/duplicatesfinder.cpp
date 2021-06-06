@@ -68,23 +68,9 @@ public:
     int                   searchResultRestriction;
     bool                  isAlbumUpdate;
     QList<int>            albumsIdList;
-    QList<qlonglong>      imageIdList;
     QList<int>            tagsIdList;
     SearchesDBJobsThread* job;
 };
-
-DuplicatesFinder::DuplicatesFinder(const QList<qlonglong>& imageIds, int minSimilarity, int maxSimilarity,
-                                   int searchResultRestriction, ProgressItem* const parent)
-    : MaintenanceTool(QLatin1String("DuplicatesFinder"), parent),
-      d(new Private)
-{
-    d->minSimilarity            = minSimilarity;
-    d->maxSimilarity            = maxSimilarity;
-
-    d->isAlbumUpdate            = true;
-    d->imageIdList              = imageIds;
-    d->searchResultRestriction  = searchResultRestriction;
-}
 
 DuplicatesFinder::DuplicatesFinder(const AlbumList& albums, const AlbumList& tags, int albumTagRelation,int minSimilarity,
                                    int maxSimilarity, int searchResultRestriction, ProgressItem* const parent)
@@ -107,21 +93,6 @@ DuplicatesFinder::DuplicatesFinder(const AlbumList& albums, const AlbumList& tag
     }
 }
 
-DuplicatesFinder::DuplicatesFinder(const int minSimilarity, int maxSimilarity,
-                                   int searchResultRestriction, ProgressItem* const parent)
-    : MaintenanceTool(QLatin1String("DuplicatesFinder"), parent),
-      d(new Private)
-{
-    d->minSimilarity            = minSimilarity;
-    d->maxSimilarity            = maxSimilarity;
-    d->searchResultRestriction  = searchResultRestriction;
-
-    foreach (Album* const a, AlbumManager::instance()->allPAlbums())
-    {
-        d->albumsIdList << a->id();
-    }
-}
-
 DuplicatesFinder::~DuplicatesFinder()
 {
     delete d;
@@ -136,49 +107,30 @@ void DuplicatesFinder::slotStart()
 
     double minThresh = d->minSimilarity / 100.0;
     double maxThresh = d->maxSimilarity / 100.0;
-    SearchesDBJobInfo jobInfo;
-    jobInfo.setDuplicatesJob();
+
+    const HaarIface::AlbumTagRelation relation = static_cast<HaarIface::AlbumTagRelation>(d->albumTagRelation);
+    QSet<qlonglong> imageIds = HaarIface::imagesFromAlbumsAndTags(d->albumsIdList, d->tagsIdList, relation);
+    SearchesDBJobInfo jobInfo(std::move(imageIds), d->isAlbumUpdate);
+
     jobInfo.setMinThreshold(minThresh);
     jobInfo.setMaxThreshold(maxThresh);
-    jobInfo.setAlbumsIds(d->albumsIdList);
-    jobInfo.setImageIds(d->imageIdList);
-    jobInfo.setAlbumTagRelation(d->albumTagRelation);
     jobInfo.setSearchResultRestriction(d->searchResultRestriction);
-
-    if (d->isAlbumUpdate)
-    {
-        jobInfo.setAlbumUpdate();
-    }
-
-    if (!d->tagsIdList.isEmpty())
-    {
-        jobInfo.setTagsIds(d->tagsIdList);
-    }
 
     d->job = DBJobsManager::instance()->startSearchesJobThread(jobInfo);
 
     connect(d->job, SIGNAL(finished()),
             this, SLOT(slotDone()));
 
-    connect(d->job, SIGNAL(totalSize(int)),
-            this, SLOT(slotDuplicatesSearchTotalAmount(int)));
-
-    connect(d->job, SIGNAL(processedSize(int)),
-            this, SLOT(slotDuplicatesSearchProcessedAmount(int)));
+    connect(d->job, SIGNAL(signalProgress(int)),
+            this, SLOT(slotDuplicatesProgress(int)));
 
     connect(this, SIGNAL(progressItemCanceled(ProgressItem*)),
             this, SIGNAL(signalComplete()));
 }
 
-void DuplicatesFinder::slotDuplicatesSearchTotalAmount(int amount)
+void DuplicatesFinder::slotDuplicatesProgress(int percentage)
 {
-    setTotalItems(amount);
-}
-
-void DuplicatesFinder::slotDuplicatesSearchProcessedAmount(int amount)
-{
-    setCompletedItems(amount);
-    updateProgress();
+    setProgress(percentage);
 }
 
 void DuplicatesFinder::slotDone()

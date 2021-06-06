@@ -13,6 +13,7 @@ set(Exiv2_Conf -DBUILD_SHARED_LIBS=ON
                -DEXIV2_ENABLE_EXTERNAL_XMP=OFF
                -DEXIV2_ENABLE_PNG=ON
                -DEXIV2_ENABLE_NLS=ON
+               -DEXIV2_ENABLE_BMFF=ON
                -DEXIV2_ENABLE_PRINTUCS2=ON
                -DEXIV2_ENABLE_LENSDATA=ON
                -DEXIV2_ENABLE_VIDEO=OFF
@@ -49,10 +50,8 @@ if(MINGW)
         GIT_REPOSITORY https://github.com/Exiv2/exiv2.git
 
         # To use official release tag
-        GIT_TAG v0.27.3
-
-        # To use current implementation from Git with tag 0.27
-#        GIT_TAG 0.27-maintenance
+#        GIT_TAG v0.27.3
+        GIT_TAG 0.27-maintenance
 
         CONFIGURE_COMMAND cp -f ${CMAKE_CURRENT_SOURCE_DIR}/../../../../bootstrap.mxe <SOURCE_DIR>/. &&
                           <SOURCE_DIR>/bootstrap.mxe ${MXE_BUILDROOT} RelWithDebInfo ${BASH_OPTIONS}
@@ -78,10 +77,8 @@ elseif(APPLE)
         GIT_REPOSITORY https://github.com/Exiv2/exiv2.git
 
         # To use official release tag
-        GIT_TAG v0.27.3
-
-        # To use current implementation from Git with tag 0.27
-#        GIT_TAG 0.27-maintenance
+#        GIT_TAG v0.27.3
+        GIT_TAG 0.27-maintenance
 
         CONFIGURE_COMMAND cp -f ${CMAKE_CURRENT_SOURCE_DIR}/../../../../bootstrap.macports <SOURCE_DIR>/. &&
                           <SOURCE_DIR>/bootstrap.macports ${PREFIX_ext_exiv2} RelWithDebInfo x86_64 ${BASH_OPTIONS}
@@ -104,10 +101,8 @@ else() # Linux
         GIT_REPOSITORY https://github.com/Exiv2/exiv2.git
 
         # To use official release tag
-        GIT_TAG v0.27.3
-
-        # To use current implementation from Git with tag 0.27
-#        GIT_TAG 0.27-maintenance
+#        GIT_TAG v0.27.3
+        GIT_TAG 0.27-maintenance
 
         CONFIGURE_COMMAND cd <SOURCE_DIR> &&
                    $(CMAKE_COMMAND) . -DCMAKE_INSTALL_PREFIX=${PREFIX_ext_exiv2}

@@ -377,7 +377,15 @@ bool AlbumManager::deleteTAlbum(TAlbum* album, QString& errMsg, bool askUser)
 
     if (album == d->rootTAlbum)
     {
-        errMsg = i18n("Cannot delete Root Tag");
+        errMsg = i18n("Cannot delete root tag");
+        return false;
+    }
+
+    if ((album->id() == FaceTags::unknownPersonTagId())   ||
+        (album->id() == FaceTags::ignoredPersonTagId())   ||
+        (album->id() == FaceTags::unconfirmedPersonTagId()))
+    {
+        errMsg = i18n("Cannot delete required face tag");
         return false;
     }
 
@@ -564,6 +572,14 @@ bool AlbumManager::mergeTAlbum(TAlbum* album, TAlbum* destAlbum, bool dialog, QS
         return false;
     }
 
+    if ((album->id() == FaceTags::unknownPersonTagId())   ||
+        (album->id() == FaceTags::ignoredPersonTagId())   ||
+        (album->id() == FaceTags::unconfirmedPersonTagId()))
+    {
+        errMsg = i18n("Cannot merge required face tag");
+        return false;
+    }
+
     if (album->firstChild())
     {
         errMsg = i18n("Only a tag without children can be merged!");
@@ -579,15 +595,28 @@ bool AlbumManager::mergeTAlbum(TAlbum* album, TAlbum* destAlbum, bool dialog, QS
 
     if (dialog)
     {
-        QPointer<QMessageBox> msgBox = new QMessageBox(QMessageBox::Warning,
-                 qApp->applicationName(),
-                 i18n("Do you want to merge tag '%1' into tag '%2'?",
-                      album->title(), destAlbum->title()),
-                 QMessageBox::Yes | QMessageBox::No,
-                 qApp->activeWindow());
+        int result = d->askMergeMessageBoxResult;
 
-        int result = msgBox->exec();
-        delete msgBox;
+        if (result == -1)
+        {
+            QPointer<QMessageBox> msgBox = new QMessageBox(QMessageBox::Warning,
+                     qApp->applicationName(),
+                     i18n("Do you want to merge tag '%1' into tag '%2'?",
+                          album->title(), destAlbum->title()),
+                     QMessageBox::Yes | QMessageBox::No,
+                     qApp->activeWindow());
+            QCheckBox* const chkBox      = new QCheckBox(i18n("Don't ask again at this session"), msgBox);
+            msgBox->setCheckBox(chkBox);
+
+            result = msgBox->exec();
+
+            if (chkBox->isChecked())
+            {
+                d->askMergeMessageBoxResult = result;
+            }
+
+            delete msgBox;
+        }
 
         if (result == QMessageBox::No)
         {
@@ -1045,7 +1074,7 @@ void AlbumManager::askUserForWriteChangedTAlbumToFiles(const QList<qlonglong>& i
                           imageIds.count()),
                      QMessageBox::Yes | QMessageBox::No,
                      qApp->activeWindow());
-            QCheckBox* const chkBox      = new QCheckBox(i18n("Do not ask again for this session"), msgBox);
+            QCheckBox* const chkBox      = new QCheckBox(i18n("Don't ask again at this session"), msgBox);
             msgBox->setCheckBox(chkBox);
 
             result = msgBox->exec();

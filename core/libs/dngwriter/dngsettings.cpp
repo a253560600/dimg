@@ -43,6 +43,8 @@
 
 #include "dcombobox.h"
 #include "dngwriter.h"
+#include "exiftoolerrorview.h"
+#include "exiftoolparser.h"
 
 namespace Digikam
 {
@@ -52,24 +54,27 @@ class Q_DECL_HIDDEN DNGSettings::Private
 public:
 
     explicit Private()
-      : previewModeLabel(nullptr),
-        compressLossLess(nullptr),
+      : previewModeLabel     (nullptr),
+        compressLossLess     (nullptr),
         backupOriginalRawFile(nullptr),
-        previewModeCB(nullptr)
+        previewModeCB        (nullptr),
+        errorView            (nullptr)
     {
     }
 
-    QLabel*    previewModeLabel;
+    QLabel*             previewModeLabel;
 
-    QCheckBox* compressLossLess;
-    QCheckBox* backupOriginalRawFile;
+    QCheckBox*          compressLossLess;
+    QCheckBox*          backupOriginalRawFile;
 
-    DComboBox* previewModeCB;
+    DComboBox*          previewModeCB;
+
+    ExifToolErrorView*  errorView;
 };
 
 DNGSettings::DNGSettings(QWidget* const parent)
     : QWidget(parent),
-      d(new Private)
+      d      (new Private)
 {
     setAttribute(Qt::WA_DeleteOnClose);
 
@@ -86,18 +91,25 @@ DNGSettings::DNGSettings(QWidget* const parent)
 
     d->previewModeLabel = new QLabel(i18n("JPEG Preview:"), this);
     d->previewModeCB    = new DComboBox(this);
-    d->previewModeCB->insertItem(DNGWriter::NONE,     i18nc("embedded preview type in dng file", "None"));
-    d->previewModeCB->insertItem(DNGWriter::MEDIUM,   i18nc("embedded preview type in dng file", "Medium"));
-    d->previewModeCB->insertItem(DNGWriter::FULLSIZE, i18nc("embedded preview type in dng file", "Full size"));
+    d->previewModeCB->insertItem(DNGWriter::NONE,      i18nc("embedded preview type in dng file", "None"));
+    d->previewModeCB->insertItem(DNGWriter::MEDIUM,    i18nc("embedded preview type in dng file", "Medium"));
+    d->previewModeCB->insertItem(DNGWriter::FULL_SIZE, i18nc("embedded preview type in dng file", "Full size"));
     d->previewModeCB->setDefaultIndex(DNGWriter::MEDIUM);
+
+    d->errorView        = new ExifToolErrorView(this);
+    d->errorView->setErrorText(i18n("Warning: ExifTool is not available to post-process metadata. "
+                                    "Without ExifTool, DNG will not include all RAW source properties."));
 
     settingsBoxLayout->addWidget(d->backupOriginalRawFile, 0, 0, 1, 1);
     settingsBoxLayout->addWidget(d->compressLossLess,      1, 0, 1, 1);
     settingsBoxLayout->addWidget(d->previewModeLabel,      3 ,0, 1, 1);
     settingsBoxLayout->addWidget(d->previewModeCB,         4 ,0 ,1, 1);
+    settingsBoxLayout->addWidget(d->errorView,             5 ,0 ,1, 1);
     settingsBoxLayout->setRowStretch(9, 10);
     settingsBoxLayout->setContentsMargins(spacing, spacing, spacing, spacing);
     settingsBoxLayout->setSpacing(spacing);
+
+    // ------------------------------------------------------------------------
 
     connect(d->backupOriginalRawFile, SIGNAL(toggled(bool)),
             this, SIGNAL(signalSettingsChanged()));
@@ -107,6 +119,13 @@ DNGSettings::DNGSettings(QWidget* const parent)
 
     connect(d->previewModeCB, SIGNAL(activated(int)),
             this, SIGNAL(signalSettingsChanged()));
+
+    connect(d->errorView, SIGNAL(signalSetupExifTool()),
+            this, SIGNAL(signalSetupExifTool()));
+
+    // ------------------------------------------------------------------------
+
+    slotSetupChanged();
 }
 
 DNGSettings::~DNGSettings()
@@ -149,6 +168,15 @@ void DNGSettings::setBackupOriginalRawFile(bool b)
 bool DNGSettings::backupOriginalRawFile() const
 {
     return d->backupOriginalRawFile->isChecked();
+}
+
+void DNGSettings::slotSetupChanged()
+{
+    ExifToolParser* const parser = new ExifToolParser(this);
+
+    d->errorView->setVisible(!parser->exifToolAvailable());
+
+    delete parser;
 }
 
 } // namespace Digikam

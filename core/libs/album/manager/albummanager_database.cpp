@@ -103,67 +103,49 @@ bool AlbumManager::setDatabase(const DbEngineParameters& params, bool priority, 
         addFakeConnection();
     }
 
+    QString databaseError;
+
+    if      (params.internalServer && suggestedAlbumRoot.isEmpty())
+    {
+        if      (!QFileInfo::exists(params.internalServerPath()))
+        {
+            databaseError = i18n("The MySQL database directory are not found, please "
+                                 "set the correct location in the next dialog.");
+        }
+        else if ((!QFileInfo::exists(params.internalServerMysqlServCmd)                         &&
+                  QStandardPaths::findExecutable(params.internalServerMysqlServCmd).isEmpty())  ||
+                 (!QFileInfo::exists(params.internalServerMysqlAdminCmd)                        &&
+                  QStandardPaths::findExecutable(params.internalServerMysqlAdminCmd).isEmpty())
+                )
+        {
+            databaseError = i18n("The MySQL binary tools are not found, please "
+                                 "set the correct location in the next dialog.");
+        }
+    }
+    else if (params.isSQLite() && suggestedAlbumRoot.isEmpty())
+    {
+        if (!QFileInfo::exists(params.databaseNameCore))
+        {
+            databaseError = i18n("The SQLite core database are not found, please "
+                                 "set the correct location in the next dialog.");
+        }
+    }
+
+    if (!databaseError.isEmpty())
+    {
+        return showDatabaseSetupPage(databaseError, priority, suggestedAlbumRoot);
+    }
+
     if (params.internalServer)
     {
-        if (!QFileInfo::exists(params.internalServerMysqlServCmd) &&
-            QStandardPaths::findExecutable(params.internalServerMysqlServCmd).isEmpty())
-        {
-            QApplication::restoreOverrideCursor();
-
-            QMessageBox::critical(qApp->activeWindow(), qApp->applicationName(),
-                                  i18n("<p>The MySQL binary tools are not found, please "
-                                       "set the correct location in the next dialog.</p>"
-                                      ));
-
-            // We cannot use Setup::execSinglePage() as this already requires a core database.
-
-            QPointer<QDialog> setup                  = new QDialog(qApp->activeWindow());
-            QVBoxLayout* const layout                = new QVBoxLayout(setup);
-            DatabaseSettingsWidget* const dbsettings = new DatabaseSettingsWidget(setup);
-            QDialogButtonBox* const buttons          = new QDialogButtonBox(QDialogButtonBox::Ok |
-                                                                            QDialogButtonBox::Cancel, setup);
-            buttons->button(QDialogButtonBox::Ok)->setDefault(true);
-
-            layout->addWidget(dbsettings);
-            layout->addStretch(10);
-            layout->addWidget(buttons);
-
-            connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
-                    setup, SLOT(accept()));
-
-            connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
-                    setup, SLOT(reject()));
-
-            ApplicationSettings* const settings = ApplicationSettings::instance();
-            dbsettings->setParametersFromSettings(settings);
-
-            if ((setup->exec() != QDialog::Accepted) || !setup)
-            {
-                delete setup;
-
-                return false;
-            }
-
-            DbEngineParameters dbParams = dbsettings->getDbEngineParameters();
-            settings->setDbEngineParameters(dbParams);
-            settings->saveSettings();
-            changeDatabase(dbParams);
-
-            delete setup;
-
-            return true;
-        }
-
         DatabaseServerError result = DatabaseServerStarter::instance()->startServerManagerProcess(params);
 
         if (result.getErrorType() != DatabaseServerError::NoErrors)
         {
-            QWidget* const parent = QWidget::find(0);
-            QString message       = i18n("<p><b>An error occurred during the internal server start.</b></p>"
-                                         "Details:\n %1", result.getErrorText());
-            QApplication::changeOverrideCursor(Qt::ArrowCursor);
-            QMessageBox::critical(parent, qApp->applicationName(), message);
-            QApplication::changeOverrideCursor(Qt::WaitCursor);
+            databaseError = i18n("An error occurred during the internal server start.\n\n"
+                                 "Details:\n%1", result.getErrorText());
+
+            return showDatabaseSetupPage(databaseError, priority, suggestedAlbumRoot);
         }
     }
 
@@ -172,19 +154,34 @@ bool AlbumManager::setDatabase(const DbEngineParameters& params, bool priority, 
     DbEngineGuiErrorHandler* const handler = new DbEngineGuiErrorHandler(CoreDbAccess::parameters());
     CoreDbAccess::initDbEngineErrorHandler(handler);
 
+    QApplication::restoreOverrideCursor();
+
     if (!handler->checkDatabaseConnection())
     {
-        QMessageBox::critical(qApp->activeWindow(), qApp->applicationName(),
-                              i18n("<p>Failed to open the database. "
-                                   "</p><p>You cannot use digiKam without a working database. "
-                                   "digiKam will attempt to start now, but it will <b>not</b> be functional. "
-                                   "Please check the database settings in the <b>configuration menu</b>.</p>"
-                                  ));
+        databaseError = i18n("Failed to open the database.\n\n"
+                             "You cannot use digiKam without a working database.\n"
+                             "Please check the database settings in the next dialog.");
 
-        CoreDbAccess::setParameters(DbEngineParameters(), CoreDbAccess::DatabaseSlave);
-        QApplication::restoreOverrideCursor();
+        if (!showDatabaseSetupPage(databaseError, priority, suggestedAlbumRoot))
+        {
+            if (params.isSQLite())
+            {
+                QMessageBox::critical(qApp->activeWindow(), qApp->applicationName(),
+                                      i18n("<p>digiKam will attempt to start now, "
+                                           "but it will <b>not</b> be functional.</p>"));
+
+                CoreDbAccess::setParameters(DbEngineParameters(), CoreDbAccess::DatabaseSlave);
+
+                return true;
+            }
+
+            return false;
+        }
+
         return true;
     }
+
+    QApplication::setOverrideCursor(Qt::WaitCursor);
 
     d->albumWatch->setDbEngineParameters(params);
 
@@ -208,8 +205,8 @@ bool AlbumManager::setDatabase(const DbEngineParameters& params, bool priority, 
             if (errorMsg.isEmpty())
             {
                 QMessageBox::critical(qApp->activeWindow(), qApp->applicationName(),
-                                      i18n("<p>Failed to open the database. "
-                                           "</p><p>You cannot use digiKam without a working database. "
+                                      i18n("<p>Failed to open the database.</p>"
+                                           "<p>You cannot use digiKam without a working database. "
                                            "digiKam will attempt to start now, but it will <b>not</b> be functional. "
                                            "Please check the database settings in the <b>configuration menu</b>.</p>"
                                           ));
@@ -785,6 +782,51 @@ bool AlbumManager::copyToNewLocation(const QFileInfo& oldFile,
     }
 
     return true;
+}
+
+bool AlbumManager::showDatabaseSetupPage(const QString& error, bool priority, const QString& suggestedAlbumRoot)
+{
+    QApplication::restoreOverrideCursor();
+
+    QMessageBox::critical(qApp->activeWindow(),
+                          qApp->applicationName(), error);
+
+    // We cannot use Setup::execSinglePage() as this already requires a core database.
+
+    QPointer<QDialog> setup                  = new QDialog(qApp->activeWindow());
+    QVBoxLayout* const layout                = new QVBoxLayout(setup);
+    DatabaseSettingsWidget* const dbsettings = new DatabaseSettingsWidget(setup);
+    QDialogButtonBox* const buttons          = new QDialogButtonBox(QDialogButtonBox::Ok |
+                                                                    QDialogButtonBox::Cancel, setup);
+    buttons->button(QDialogButtonBox::Ok)->setDefault(true);
+
+    layout->addWidget(dbsettings);
+    layout->addStretch(10);
+    layout->addWidget(buttons);
+
+    connect(buttons->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
+            setup, SLOT(accept()));
+
+    connect(buttons->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
+            setup, SLOT(reject()));
+
+    ApplicationSettings* const settings = ApplicationSettings::instance();
+    dbsettings->setParametersFromSettings(settings);
+
+    if ((setup->exec() != QDialog::Accepted) || !setup)
+    {
+        delete setup;
+
+        return false;
+    }
+
+    DbEngineParameters dbParams = dbsettings->getDbEngineParameters();
+    settings->setDbEngineParameters(dbParams);
+    settings->saveSettings();
+
+    delete setup;
+
+    return setDatabase(dbParams, priority, suggestedAlbumRoot);
 }
 
 } // namespace Digikam

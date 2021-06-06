@@ -51,7 +51,7 @@ ConvertToDngPlugin::~ConvertToDngPlugin()
 
 QString ConvertToDngPlugin::name() const
 {
-    return i18n("Convert RAW To DNG");
+    return i18nc("@title", "Convert RAW To DNG");
 }
 
 QString ConvertToDngPlugin::iid() const
@@ -66,14 +66,15 @@ QIcon ConvertToDngPlugin::icon() const
 
 QString ConvertToDngPlugin::description() const
 {
-    return i18n("A tool to convert RAW images to DNG container");
+    return i18nc("@info", "A tool to convert RAW images to DNG container");
 }
 
 QString ConvertToDngPlugin::details() const
 {
-    return i18n("<p>This Batch Queue Manager tool can convert RAW images data to DNG format.</p>"
-                "<p>The Digital Negative is a lossless RAW image format created by Adobe.</p>"
-                "<p>See details about this format from <a href='https://en.wikipedia.org/wiki/Digital_Negative'>this page</a>.</p>");
+    return i18nc("@info", "This Generic tool can convert RAW images data to DNG format.\n\n"
+                 "The Digital Negative is a lossless RAW image format created by Adobe.\n\n"
+                 "See details on this wikipedia entry about this format: %1",
+                 QLatin1String("<a href='https://en.wikipedia.org/wiki/Digital_Negative'>https://en.wikipedia.org/wiki/Digital_Negative</a>.</p>"));
 }
 
 QList<DPluginAuthor> ConvertToDngPlugin::authors() const
@@ -81,7 +82,16 @@ QList<DPluginAuthor> ConvertToDngPlugin::authors() const
     return QList<DPluginAuthor>()
             << DPluginAuthor(QString::fromUtf8("Gilles Caulier"),
                              QString::fromUtf8("caulier dot gilles at gmail dot com"),
-                             QString::fromUtf8("(C) 2015-2021"))
+                             QString::fromUtf8("(C) 2008-2021"))
+            << DPluginAuthor(QString::fromUtf8("Jens Mueller"),
+                             QString::fromUtf8("tschenser at gmx dot de"),
+                             QString::fromUtf8("(C) 2010-2011"))
+            << DPluginAuthor(QString::fromUtf8("Smit Mehta"),
+                             QString::fromUtf8("smit dot meh at gmail dot com"),
+                             QString::fromUtf8("(C) 2012"))
+            << DPluginAuthor(QString::fromUtf8("Maik Qualmann"),
+                             QString::fromUtf8("metzpinguin at gmail dot com"),
+                             QString::fromUtf8("(C) 2020-2021"))
             ;
 }
 

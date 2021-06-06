@@ -32,17 +32,27 @@
 
 #include <klocalizedstring.h>
 
+// Local includes
+
+#include "dinfointerface.h"
+#include "dpluginbqm.h"
+
 namespace DigikamBqmConvertToDngPlugin
 {
 
 ConvertToDNG::ConvertToDNG(QObject* const parent)
-    : BatchTool(QLatin1String("ConvertToDNG"), ConvertTool, parent)
+    : BatchTool(QLatin1String("ConvertToDNG"), ConvertTool, parent),
+      m_changeSettings(true)
 {
-    m_changeSettings = true;
 }
 
 ConvertToDNG::~ConvertToDNG()
 {
+}
+
+BatchTool* ConvertToDNG::clone(QObject* const parent) const
+{
+    return new ConvertToDNG(parent);
 }
 
 void ConvertToDNG::registerSettingsWidget()
@@ -51,6 +61,9 @@ void ConvertToDNG::registerSettingsWidget()
 
     connect(DNGBox, SIGNAL(signalSettingsChanged()),
             this, SLOT(slotSettingsChanged()));
+
+    connect(DNGBox, SIGNAL(signalSetupExifTool()),
+            this, SLOT(slotSetupExifTool()));
 
     m_settingsWidget = DNGBox;
 
@@ -99,6 +112,24 @@ void ConvertToDNG::slotSettingsChanged()
     }
 }
 
+void ConvertToDNG::slotSetupExifTool()
+{
+    DInfoInterface* const iface = plugin()->infoIface();
+
+    if (iface)
+    {
+        DNGSettings* const DNGBox = dynamic_cast<DNGSettings*>(m_settingsWidget);
+
+        if (DNGBox)
+        {
+            connect(iface, SIGNAL(signalSetupChanged()),
+                    DNGBox, SLOT(slotSetupChanged()));
+        }
+
+        iface->openSetupPage(DInfoInterface::ExifToolPage);
+    }
+}
+
 QString ConvertToDNG::outputSuffix() const
 {
     return QLatin1String("dng");
@@ -113,7 +144,9 @@ void ConvertToDNG::cancel()
 bool ConvertToDNG::toolOperations()
 {
     if (!isRawFile(inputUrl()))
+    {
         return false;
+    }
 
     m_dngProcessor.reset();
     m_dngProcessor.setInputFile(inputUrl().toLocalFile());
@@ -124,7 +157,7 @@ bool ConvertToDNG::toolOperations()
 
     int ret = m_dngProcessor.convert();
 
-    return (ret == DNGWriter::PROCESSCOMPLETE);
+    return (ret == DNGWriter::PROCESS_COMPLETE);
 }
 
 } // namespace DigikamBqmConvertToDngPlugin

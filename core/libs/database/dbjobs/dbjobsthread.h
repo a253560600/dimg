@@ -171,10 +171,21 @@ public:
      */
     void searchesListing(const SearchesDBJobInfo& info);
 
+public Q_SLOTS:
+
+    void slotImageProcessed();
+    void slotDuplicatesResults(const HaarIface::DuplicatesResultsMap&);
+
 Q_SIGNALS:
 
-    void processedSize(int number);
-    void totalSize(int number);
+    void signalProgress(int percentage);
+
+private:
+    HaarIface::DuplicatesResultsMap m_results;
+    QScopedPointer<HaarIface>       m_haarIface;
+    bool                            m_isAlbumUpdate;
+    int                             m_processedImages;
+    int                             m_totalImages2Scan;
 };
 
 // ---------------------------------------------

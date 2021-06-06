@@ -43,6 +43,7 @@
 #include "pgfutils.h"
 #include "digikam-lcms.h"
 #include "metaengine.h"
+#include "dngwriter.h"
 
 #ifdef HAVE_LENSFUN
 #   include "lensfuniface.h"
@@ -113,7 +114,7 @@ LibsInfoDlg::LibsInfoDlg(QWidget* const parent)
     // --------------------------------------------------------
     // By default set a list of common components information used by Showfoto and digiKam.
 
-    static const char* CONTEXT         = "Component information, see help->components";
+    static const char* CONTEXT         = "@item: Component information, see help->components";
     static const QString SUPPORTED_YES = i18nc("@item: component is supported/available",     "Yes");
     static const QString SUPPORTED_NO  = i18nc("@item: component is not available/supported", "No");
 
@@ -142,9 +143,10 @@ LibsInfoDlg::LibsInfoDlg(QWidget* const parent)
     list.insert(i18nc(CONTEXT, "Rajce support"),               SUPPORTED_YES);
 #endif
 
-
     list.insert(i18nc(CONTEXT, "Exiv2"),                       MetaEngine::Exiv2Version());
     list.insert(i18nc(CONTEXT, "Exiv2 supports XMP metadata"), MetaEngine::supportXmp() ?
+                SUPPORTED_YES : SUPPORTED_NO);
+    list.insert(i18nc(CONTEXT, "Exiv2 supports Base Media"),   MetaEngine::supportBmff() ?
                 SUPPORTED_YES : SUPPORTED_NO);
 
 #ifdef HAVE_LENSFUN
@@ -188,6 +190,9 @@ LibsInfoDlg::LibsInfoDlg(QWidget* const parent)
     list.insert(i18nc(CONTEXT, "LibLCMS"),                     QString::number(LCMS_VERSION));
     list.insert(i18nc(CONTEXT, "LibPGF"),                      PGFUtils::libPGFVersion());
 
+    list.insert(i18nc(CONTEXT, "XMP SDK"),                     DNGWriter::xmpSdkVersion());
+    list.insert(i18nc(CONTEXT, "DNG SDK"),                     DNGWriter::dngSdkVersion());
+
 #ifdef HAVE_JASPER
     list.insert(i18nc(CONTEXT, "LibJasper"),                   QLatin1String(jas_getversion()));
 #else
@@ -218,7 +223,7 @@ LibsInfoDlg::~LibsInfoDlg()
 
 QString LibsInfoDlg::checkTriState(int value) const
 {
-    switch(value)
+    switch (value)
     {
         case true:
         {

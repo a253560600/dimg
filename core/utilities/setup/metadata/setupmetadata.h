@@ -44,8 +44,9 @@ public:
         Sidecars,
         Rotation,
         Display,
-        AdvancedConfig,
-        Baloo
+        ExifTool,
+        Baloo,
+        AdvancedConfig
     };
 
 public:
@@ -62,7 +63,11 @@ public:
 
 private:
 
-    void readSettings();
+    void appendBehaviorTab();
+    void appendSidecarsTab();
+    void appendDisplayTab();
+    void appendRotationTab();
+    void appendBalooTab();
 
 private Q_SLOTS:
 

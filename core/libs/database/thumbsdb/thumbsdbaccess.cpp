@@ -78,9 +78,9 @@ class Q_DECL_HIDDEN ThumbsDbAccessMutexLocker : public QMutexLocker
 {
 public:
 
-    explicit ThumbsDbAccessMutexLocker(ThumbsDbAccessStaticPriv* const d)
-        : QMutexLocker(&d->lock.mutex),
-          d           (d)
+    explicit ThumbsDbAccessMutexLocker(ThumbsDbAccessStaticPriv* const dd)
+        : QMutexLocker(&dd->lock.mutex),
+          d           (dd)
     {
         d->lock.lockCount++;
     }
@@ -210,7 +210,9 @@ void ThumbsDbAccess::setParameters(const DbEngineParameters& parameters)
 bool ThumbsDbAccess::checkReadyForUse(InitializationObserver* const observer)
 {
     if (!DbEngineAccess::checkReadyForUse(d->lastError))
+    {
         return false;
+    }
 
     // create an object with private shortcut constructor
 

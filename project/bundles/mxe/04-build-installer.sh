@@ -204,6 +204,17 @@ else
 
 fi
 
+#################################################################################################
+# Install ExifTool binary.
+
+EXIFTOOL_VERSION="12.26"
+wget https://exiftool.org/exiftool-$EXIFTOOL_VERSION.zip -P $BUNDLEDIR
+unzip $BUNDLEDIR/exiftool-$EXIFTOOL_VERSION.zip -o -d $BUNDLEDIR
+mv "$BUNDLEDIR/exiftool(-k).exe" "$BUNDLEDIR/exiftool.exe"
+rm -f $BUNDLEDIR/exiftool-$EXIFTOOL_VERSION.zip
+
+#################################################################################################
+
 if [[ $DK_DEBUG = 1 ]] ; then
 
     DEBUG_SUF="-debug"

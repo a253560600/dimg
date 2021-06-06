@@ -60,6 +60,7 @@
 #include "dio.h"
 #include "fileactionmngr.h"
 #include "tagsactionmngr.h"
+#include "setup.h"
 
 #ifdef HAVE_MARBLE
 #   include "itemgps.h"
@@ -438,9 +439,10 @@ DBInfoIface::DInfoMap DBInfoIface::albumInfo(int gid) const
 
     if (p)
     {
-        map.insert(QLatin1String("caption"),  p->caption());
-        map.insert(QLatin1String("date"),     p->date());
-        map.insert(QLatin1String("path"),     p->folderPath());
+        map.insert(QLatin1String("caption"),   p->caption());
+        map.insert(QLatin1String("date"),      p->date());
+        map.insert(QLatin1String("path"),      p->folderPath());
+        map.insert(QLatin1String("albumpath"), p->albumPath());
     }
 
     return map;
@@ -456,6 +458,7 @@ DBInfoIface::DInfoMap DBInfoIface::itemInfo(const QUrl& url) const
     {
         map.insert(QLatin1String("name"),            info.name());
         map.insert(QLatin1String("title"),           info.title());
+        map.insert(QLatin1String("albumid"),         info.albumId());
         map.insert(QLatin1String("comment"),         info.comment());
         map.insert(QLatin1String("orientation"),     info.orientation());
         map.insert(QLatin1String("datetime"),        info.dateTime());
@@ -468,19 +471,19 @@ DBInfoIface::DInfoMap DBInfoIface::itemInfo(const QUrl& url) const
         // Get digiKam Tags Path list of picture from database.
         // Ex.: "City/Paris/Monuments/Notre Dame"
 
-        QList<int> tagIds    = info.tagIds();
-        QStringList tagspath = AlbumManager::instance()->tagPaths(tagIds, false);
+        QList<int> tagIds            = info.tagIds();
+        QStringList tagspath         = AlbumManager::instance()->tagPaths(tagIds, false);
         map.insert(QLatin1String("tagspath"),        tagspath);
 
         // Get digiKam Tags name (keywords) list of picture from database.
         // Ex.: "Notre Dame"
 
-        QStringList tags     = AlbumManager::instance()->tagNames(tagIds);
+        QStringList tags             = AlbumManager::instance()->tagNames(tagIds);
         map.insert(QLatin1String("keywords"),        tags);
 
         // Get GPS location of picture from database.
 
-        ItemPosition pos    = info.imagePosition();
+        ItemPosition pos             = info.imagePosition();
 
         if (!pos.isEmpty())
         {
@@ -491,7 +494,7 @@ DBInfoIface::DInfoMap DBInfoIface::itemInfo(const QUrl& url) const
 
         // Get Copyright information of picture from database.
 
-        ItemCopyright rights        = info.imageCopyright();
+        ItemCopyright rights         = info.imageCopyright();
         map.insert(QLatin1String("creators"),        rights.creator());
         map.insert(QLatin1String("credit"),          rights.credit());
         map.insert(QLatin1String("rights"),          rights.rights());
@@ -569,7 +572,7 @@ void DBInfoIface::setItemInfo(const QUrl& url, const DInfoMap& map) const
 
     if (!keys.isEmpty())
     {
-        qCWarning(DIGIKAM_GENERAL_LOG) << "Keys not yet supported in DMetaInfoIface::setItemInfo():" << keys;
+        qCWarning(DIGIKAM_GENERAL_LOG) << "Keys not yet supported in DBInfoIface::setItemInfo():" << keys;
     }
 }
 
@@ -788,6 +791,31 @@ QMap<QString, QString> DBInfoIface::passShortcutActionsToWidget(QWidget* const w
     shortcutPrefixes.insert(QLatin1String("colorlabel"), TagsActionMngr::defaultManager()->colorShortcutPrefix());
 
     return shortcutPrefixes;
+}
+
+void DBInfoIface::deleteImage(const QUrl& url)
+{
+    ItemInfo info = ItemInfo::fromUrl(url);
+
+    DIO::del(info, true);
+}
+
+void DBInfoIface::openSetupPage(SetupPage page)
+{
+    switch (page)
+    {
+        case ExifToolPage:
+        {
+            if (Setup::execExifTool(nullptr))
+            {
+                emit signalSetupChanged();
+            }
+        }
+
+        default:
+        {
+        }
+    }
 }
 
 } // namespace Digikam

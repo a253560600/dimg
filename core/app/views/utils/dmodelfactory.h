@@ -55,7 +55,7 @@ public:
     ~DModelFactory() override;
 
     TagModel*          getTagModel()          const;
-    TagModel*          getTagFacesModel()     const;
+    TagModel*          getTagFaceModel()      const;
     TagModel*          getTagFilterModel()    const;
 
     AlbumModel*        getAlbumModel()        const;
@@ -71,6 +71,8 @@ private:
 
     // Disable
     explicit DModelFactory(QObject*) = delete;
+
+private:
 
     class Private;
     Private* const d;

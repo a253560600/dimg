@@ -49,7 +49,7 @@ QString NamespaceEntry::DM_RATING_CONTAINER()
 
 QString NamespaceEntry::DM_COMMENT_CONTAINER()
 {
-    return QString::fromUtf8(I18N_NOOP("Comment"));
+    return QString::fromUtf8(I18N_NOOP("Caption"));
 }
 
 QString NamespaceEntry::DM_COLORLABEL_CONTAINER()
@@ -228,12 +228,12 @@ void DMetadataSettingsContainer::addMapping(const QString& key)
     d->writeMappings[key] = QList<NamespaceEntry>();
 }
 
-QList<NamespaceEntry> &DMetadataSettingsContainer::getReadMapping(const QString& key) const
+QList<NamespaceEntry>& DMetadataSettingsContainer::getReadMapping(const QString& key) const
 {
     return d->readMappings[key];
 }
 
-QList<NamespaceEntry> &DMetadataSettingsContainer::getWriteMapping(const QString& key) const
+QList<NamespaceEntry>& DMetadataSettingsContainer::getWriteMapping(const QString& key) const
 {
     return d->writeMappings[key];
 }

@@ -42,7 +42,8 @@ namespace ShowFoto
 
 typedef QPair<int, int> IntPair;
 
-class ShowfotoItemModel : public QAbstractListModel, public DragDropModelImplementation
+class ShowfotoItemModel : public QAbstractListModel,
+                          public DragDropModelImplementation
 {
     Q_OBJECT
 
@@ -285,9 +286,11 @@ public:
 
 private:
 
-    // Hidden copy constructor and assignment operator.
-    ShowfotoItemModel(const ShowfotoItemModel&);
-    ShowfotoItemModel& operator=(const ShowfotoItemModel&);
+    // Disable
+    ShowfotoItemModel(const ShowfotoItemModel&)            = delete;
+    ShowfotoItemModel& operator=(const ShowfotoItemModel&) = delete;
+
+private:
 
     Private* const d;
 };

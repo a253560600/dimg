@@ -73,12 +73,12 @@ bool MetaEngine::canWriteExif(const QString& filePath)
 
         return ((mode == Exiv2::amWrite) || (mode == Exiv2::amReadWrite));
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        qCCritical(DIGIKAM_METAENGINE_LOG) << "Cannot check Exif access mode using Exiv2 (Error #"
+        qCCritical(DIGIKAM_METAENGINE_LOG) << "Cannot check Exif access mode with Exiv2:(Error #"
                                            << e.code() << ": " << QString::fromStdString(e.what()) << ")";
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -101,11 +101,11 @@ bool MetaEngine::clearExif() const
 
         return true;
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot clear Exif data using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot clear Exif data with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -142,16 +142,16 @@ QByteArray MetaEngine::getExifEncoded(bool addExifHeader) const
             return data;
         }
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
         if (!d->filePath.isEmpty())
         {
             qCDebug(DIGIKAM_METAENGINE_LOG) << "From file " << d->filePath.toLatin1().constData();
         }
 
-        d->printExiv2ExceptionError(QLatin1String("Cannot get Exif data using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot get Exif data with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -172,16 +172,16 @@ bool MetaEngine::setExif(const QByteArray& data) const
             return (!d->exifMetadata().empty());
         }
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
         if (!d->filePath.isEmpty())
         {
             qCCritical(DIGIKAM_METAENGINE_LOG) << "From file " << d->filePath.toLatin1().constData();
         }
 
-        d->printExiv2ExceptionError(QLatin1String("Cannot set Exif data using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot set Exif data with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -246,11 +246,11 @@ QString MetaEngine::getExifComment(bool readDescription) const
             }
         }
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot find Exif User Comment using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot find Exif User Comment with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -306,9 +306,8 @@ bool MetaEngine::setExifComment(const QString& comment, bool writeDescription) c
                 {
                     // write as ASCII
 
-                    std::string exifComment("charset=\"Ascii\" ");
-                    exifComment                                += comment.toLatin1().constData();
-                    d->exifMetadata()["Exif.Photo.UserComment"] = exifComment;
+                    QString exifComment(QString::fromLatin1("charset=\"Ascii\" %1").arg(comment));
+                    d->exifMetadata()["Exif.Photo.UserComment"] = exifComment.toStdString();
 
                     return true;
                 }
@@ -316,18 +315,17 @@ bool MetaEngine::setExifComment(const QString& comment, bool writeDescription) c
 
             // write as Unicode (UCS-2)
 
-            std::string exifComment("charset=\"Unicode\" ");
-            exifComment                                += comment.toUtf8().constData();
-            d->exifMetadata()["Exif.Photo.UserComment"] = exifComment;
+            QString exifComment(QString::fromUtf8("charset=\"Unicode\" %1").arg(comment));
+            d->exifMetadata()["Exif.Photo.UserComment"] = exifComment.toStdString();
         }
 
         return true;
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot set Exif Comment using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot set Exif Comment with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -348,9 +346,9 @@ QString MetaEngine::getExifTagTitle(const char* exifTagName)
     }
     catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot get metadata tag title using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot get metadata tag title with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -371,9 +369,9 @@ QString MetaEngine::getExifTagDescription(const char* exifTagName)
     }
     catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot get metadata tag description using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot get metadata tag description with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -397,11 +395,11 @@ bool MetaEngine::removeExifTag(const char* exifTagName) const
             return true;
         }
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot remove Exif tag using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot remove Exif tag with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -427,12 +425,12 @@ bool MetaEngine::getExifTagRational(const char* exifTagName, long int& num, long
             return true;
         }
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QString::fromLatin1("Cannot find Exif Rational value from key '%1' into image using Exiv2 ")
+        d->printExiv2ExceptionError(QString::fromLatin1("Cannot find Exif Rational value from key '%1' into image with Exiv2:")
                                     .arg(QLatin1String(exifTagName)), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -450,11 +448,11 @@ bool MetaEngine::setExifTagLong(const char* exifTagName, long val) const
 
         return true;
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot set Exif tag long value into image using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot set Exif tag long value into image with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -472,11 +470,11 @@ bool MetaEngine::setExifTagRational(const char* exifTagName, long int num, long 
 
         return true;
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot set Exif tag rational value into image using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot set Exif tag rational value into image with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -500,11 +498,11 @@ bool MetaEngine::setExifTagData(const char* exifTagName, const QByteArray& data)
 
         return true;
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot set Exif tag data into image using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot set Exif tag data into image with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -522,7 +520,9 @@ bool MetaEngine::setExifTagVariant(const char* exifTagName, const QVariant& val,
         case QVariant::Bool:
         case QVariant::LongLong:
         case QVariant::ULongLong:
+        {
             return setExifTagLong(exifTagName, val.toInt());
+        }
 
         case QVariant::Double:
         {
@@ -570,14 +570,13 @@ bool MetaEngine::setExifTagVariant(const char* exifTagName, const QVariant& val,
 
             try
             {
-                const std::string &exifdatetime(dateTime.toString(QString::fromLatin1("yyyy:MM:dd hh:mm:ss")).toLatin1().constData());
-                d->exifMetadata()[exifTagName] = exifdatetime;
+                d->exifMetadata()[exifTagName] = dateTime.toString(QLatin1String("yyyy:MM:dd hh:mm:ss")).toStdString();
             }
-            catch(Exiv2::AnyError& e)
+            catch (Exiv2::AnyError& e)
             {
-                d->printExiv2ExceptionError(QLatin1String("Cannot set Date & Time in image using Exiv2 "), e);
+                d->printExiv2ExceptionError(QLatin1String("Cannot set Date & Time in image with Exiv2:"), e);
             }
-            catch(...)
+            catch (...)
             {
                 qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
             }
@@ -587,13 +586,19 @@ bool MetaEngine::setExifTagVariant(const char* exifTagName, const QVariant& val,
 
         case QVariant::String:
         case QVariant::Char:
+        {
             return setExifTagString(exifTagName, val.toString());
+        }
 
         case QVariant::ByteArray:
+        {
             return setExifTagData(exifTagName, val.toByteArray());
+        }
 
         default:
+        {
             break;
+        }
     }
 
     return false;
@@ -614,12 +619,16 @@ QString MetaEngine::createExifUserStringFromValue(const char* exifTagName, const
             case QVariant::Bool:
             case QVariant::LongLong:
             case QVariant::ULongLong:
+            {
                 datum = (int32_t)val.toInt();
                 break;
+            }
 
             case QVariant::UInt:
+            {
                 datum = (uint32_t)val.toUInt();
                 break;
+            }
 
             case QVariant::Double:
             {
@@ -665,19 +674,22 @@ QString MetaEngine::createExifUserStringFromValue(const char* exifTagName, const
                     break;
                 }
 
-                const std::string &exifdatetime(dateTime.toString(QString::fromLatin1("yyyy:MM:dd hh:mm:ss")).toLatin1().constData());
-                datum = exifdatetime;
+                datum = dateTime.toString(QLatin1String("yyyy:MM:dd hh:mm:ss")).toStdString();
                 break;
             }
 
             case QVariant::ByteArray:
             case QVariant::String:
             case QVariant::Char:
-                datum = (std::string)val.toString().toLatin1().constData();
+            {
+                datum = val.toString().toStdString();
                 break;
+            }
 
             default:
+            {
                 break;
+            }
         }
 
         std::ostringstream os;
@@ -691,11 +703,11 @@ QString MetaEngine::createExifUserStringFromValue(const char* exifTagName, const
 
         return tagValue;
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot set Iptc tag string into image using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot get Exif tag user string with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -725,12 +737,12 @@ bool MetaEngine::getExifTagLong(const char* exifTagName, long& val, int componen
             return true;
         }
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QString::fromLatin1("Cannot find Exif key '%1' into image using Exiv2 ")
+        d->printExiv2ExceptionError(QString::fromLatin1("Cannot find Exif key '%1' into image with Exiv2:")
                                     .arg(QLatin1String(exifTagName)), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -758,12 +770,12 @@ QByteArray MetaEngine::getExifTagData(const char* exifTagName) const
             return data;
         }
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QString::fromLatin1("Cannot find Exif key '%1' into image using Exiv2 ")
+        d->printExiv2ExceptionError(QString::fromLatin1("Cannot find Exif key '%1' into image with Exiv2:")
                                     .arg(QLatin1String(exifTagName)), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -862,16 +874,18 @@ QVariant MetaEngine::getExifTagVariant(const char* exifTagName, bool rationalAsL
                 }
 
                 default:
+                {
                     break;
+                }
             }
         }
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QString::fromLatin1("Cannot find Exif key '%1' in the image using Exiv2 ")
+        d->printExiv2ExceptionError(QString::fromLatin1("Cannot find Exif key '%1' in the image with Exiv2:")
                                     .arg(QLatin1String(exifTagName)), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -915,12 +929,12 @@ QString MetaEngine::getExifTagString(const char* exifTagName, bool escapeCR) con
             return tagValue;
         }
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QString::fromLatin1("Cannot find Exif key '%1' into image using Exiv2 ")
+        d->printExiv2ExceptionError(QString::fromLatin1("Cannot find Exif key '%1' into image with Exiv2:")
                                     .arg(QLatin1String(exifTagName)), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -934,15 +948,15 @@ bool MetaEngine::setExifTagString(const char* exifTagName, const QString& value)
 
     try
     {
-        d->exifMetadata()[exifTagName] = std::string(value.toLatin1().constData());
+        d->exifMetadata()[exifTagName] = value.toStdString();
 
         return true;
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot set Exif tag string into image using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot set Exif tag string into image with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -994,11 +1008,11 @@ QImage MetaEngine::getExifThumbnail(bool fixOrientation) const
             }
         }
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot get Exif Thumbnail using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot get Exif Thumbnail with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -1041,11 +1055,11 @@ bool MetaEngine::setExifThumbnail(const QImage& thumbImage) const
 
         return true;
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot set Exif Thumbnail using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot set Exif Thumbnail with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -1118,11 +1132,11 @@ bool MetaEngine::setTiffThumbnail(const QImage& thumbImage) const
             return true;
         }
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot set TIFF Thumbnail using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot set TIFF Thumbnail with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -1143,11 +1157,11 @@ bool MetaEngine::removeExifThumbnail() const
 
         return true;
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot remove Exif Thumbnail using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot remove Exif Thumbnail with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -1195,6 +1209,27 @@ MetaEngine::MetaDataMap MetaEngine::getExifTagsDataList(const QStringList& exifK
                 // NOTE: special cases to render contents of these GPS info tags. See bug #425884.
 
                 tagValue = d->convertCommentValue(*md);
+            }
+            else if ((key == QLatin1String("Exif.GPSInfo.GPSTrack"))      ||
+                     (key == QLatin1String("Exif.GPSInfo.GPSImgDirection")))
+            {
+                // NOTE: special cases to render contents of these GPS info tags. See bug #435317.
+
+                double num = (*md).toRational().first;
+                double den = (*md).toRational().second;
+
+                tagValue   = (den == 0.0) ? QString::fromStdString(md->print())
+                                          : QString::fromLatin1("%1 deg").arg(num / den);
+            }
+            else if (key == QLatin1String("Exif.GPSInfo.GPSSpeed"))
+            {
+                // NOTE: special cases to render contents of these GPS info tags. See bug #435317.
+
+                double num = (*md).toRational().first;
+                double den = (*md).toRational().second;
+
+                tagValue   = (den == 0.0) ? QString::fromStdString(md->print())
+                                          : tagValue = QString::number(num / den);
             }
             else if (key == QLatin1String("Exif.Image.0x935c"))
             {
@@ -1245,11 +1280,11 @@ MetaEngine::MetaDataMap MetaEngine::getExifTagsDataList(const QStringList& exifK
 
         return metaDataMap;
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot parse EXIF metadata using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot parse EXIF metadata with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -1308,11 +1343,11 @@ MetaEngine::TagsMap MetaEngine::getStdExifTagsList() const
 
         return tagsMap;
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot get Exif Tags list using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot get Exif Tags list with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }
@@ -1369,11 +1404,11 @@ MetaEngine::TagsMap MetaEngine::getMakernoteTagsList() const
 
         return tagsMap;
     }
-    catch(Exiv2::AnyError& e)
+    catch (Exiv2::AnyError& e)
     {
-        d->printExiv2ExceptionError(QLatin1String("Cannot get Makernote Tags list using Exiv2 "), e);
+        d->printExiv2ExceptionError(QLatin1String("Cannot get Makernote Tags list with Exiv2:"), e);
     }
-    catch(...)
+    catch (...)
     {
         qCCritical(DIGIKAM_METAENGINE_LOG) << "Default exception from Exiv2";
     }

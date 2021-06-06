@@ -31,9 +31,9 @@ namespace Digikam
 {
 
 TanTriggsPreprocessor::TanTriggsPreprocessor()
-    : alpha(0.1f),
-      tau(10.0f),
-      gamma(0.2f),
+    : alpha (0.1f),
+      tau   (10.0f),
+      gamma (0.2f),
       sigma0(1),
       sigma1(2)
 {
@@ -136,7 +136,7 @@ cv::Mat TanTriggsPreprocessor::normalize(const cv::Mat& src)
 
     cv::Mat dst;
 
-    switch(src.channels())
+    switch (src.channels())
     {
         case 1:
             cv::normalize(src, dst, 0, 255, cv::NORM_MINMAX, CV_8UC1);

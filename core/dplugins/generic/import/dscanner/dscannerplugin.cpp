@@ -84,7 +84,7 @@ QString DigitalScannerPlugin::description() const
 
 QString DigitalScannerPlugin::details() const
 {
-    return i18n("<p>This tool permit to acquire new images from a digital scanner.</p>"
+    return i18n("<p>This tool allow to acquire new images from a digital scanner.</p>"
                 "<p>Plenty of scanner devices are supported through the Sane library.</p>"
                 "<p>Target image can be post processed as crop and rotate.</p>");
 }
@@ -131,6 +131,8 @@ void DigitalScannerPlugin::slotDigitalScanner()
 
         if (dev.isEmpty())
         {
+            QMessageBox::warning(nullptr, qApp->applicationName(), i18n("There is no scanner device available.\n"
+                                                                        "Please check your configuration"));
             return;
         }
 
@@ -138,7 +140,8 @@ void DigitalScannerPlugin::slotDigitalScanner()
         {
             // could not open a scanner
 
-            QMessageBox::warning(nullptr, qApp->applicationName(), i18n("Cannot open scanner device."));
+            QMessageBox::warning(nullptr, qApp->applicationName(), i18n("Cannot open scanner device \"%1\".\n"
+                                                                        "Please check your configuration", dev));
             return;
         }
 

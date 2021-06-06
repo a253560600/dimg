@@ -34,6 +34,7 @@
 // Local includes
 
 #include "metaenginesettings.h"
+#include "digikam_globals.h"
 
 namespace Digikam
 {
@@ -99,6 +100,8 @@ void MetaEngineSettingsContainer::readFromConfig(KConfigGroup& group)
 
     sidecarExtensions     = group.readEntry("Custom Sidecar Extensions",   QStringList());
 
+    exifToolPath          = group.readEntry("ExifTool Path",               defaultExifToolSearchPaths().first());
+
     if (group.readEntry("Rotate By Internal Flag", true))
     {
         rotationBehavior |= RotateByInternalFlag;
@@ -152,6 +155,40 @@ void MetaEngineSettingsContainer::writeToConfig(KConfigGroup& group) const
     group.writeEntry("Use Lazy Synchronization",    useLazySync);
 
     group.writeEntry("Custom Sidecar Extensions",   sidecarExtensions);
+
+    group.writeEntry("ExifTool Path",               exifToolPath);
+}
+
+QStringList MetaEngineSettingsContainer::defaultExifToolSearchPaths() const
+{
+    QStringList defPaths;
+
+#ifdef Q_OS_MACOS
+
+    // Install path for the official ExifTool DMG package
+    defPaths << QLatin1String("/usr/local/bin");
+
+    // digiKam Bundle PKG install path
+    defPaths << macOSBundlePrefix() + QLatin1String("bin");
+
+    // Std Macports install path
+    defPaths << QLatin1String("/opt/local/bin");
+
+#endif
+
+#ifdef Q_OS_WIN
+
+    defPaths << QLatin1String("C:/Program Files/digiKam");
+
+#endif
+
+#ifdef Q_OS_UNIX
+
+    defPaths << QLatin1String("/usr/bin");
+
+#endif
+
+    return defPaths;
 }
 
 QDebug operator<<(QDebug dbg, const MetaEngineSettingsContainer& inf)
@@ -203,5 +240,6 @@ QDebug operator<<(QDebug dbg, const MetaEngineSettingsContainer& inf)
 
     return dbg.space();
 }
+
 
 } // namespace Digikam

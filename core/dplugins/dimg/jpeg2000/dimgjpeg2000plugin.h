@@ -49,7 +49,7 @@ class DImgJPEG2000Plugin : public DPluginDImg
 public:
 
     explicit DImgJPEG2000Plugin(QObject* const parent = nullptr);
-    ~DImgJPEG2000Plugin() override;
+    ~DImgJPEG2000Plugin()                                                                         override;
 
     QString name()                                                                          const override;
     QString iid()                                                                           const override;

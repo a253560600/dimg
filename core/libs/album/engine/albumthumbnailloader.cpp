@@ -74,7 +74,8 @@ public:
         minBlendSize(20),
         iconTagThumbThread(nullptr),
         iconFaceThumbThread(nullptr),
-        iconAlbumThumbThread(nullptr)
+        iconAlbumThumbThread(nullptr),
+        fallBackIcon(QIcon::fromTheme(QLatin1String("dialog-cancel")))
     {
     }
 
@@ -85,6 +86,8 @@ public:
     ThumbnailLoadThread*                 iconTagThumbThread;
     ThumbnailLoadThread*                 iconFaceThumbThread;
     ThumbnailLoadThread*                 iconAlbumThumbThread;
+
+    QIcon                                fallBackIcon;
 
     IdAlbumMap                           idAlbumMap;
 
@@ -241,15 +244,17 @@ int AlbumThumbnailLoader::computeFaceSize(RelativeSize relativeSize) const
 
 QPixmap AlbumThumbnailLoader::loadIcon(const QString& name, int size) const
 {
-    QPixmap* pix = d->iconCache[qMakePair(name, size)];
+    QPixmap* cachePix = d->iconCache[qMakePair(name, size)];
 
-    if (!pix)
+    if (!cachePix)
     {
-        d->iconCache.insert(qMakePair(name, size), new QPixmap(QIcon::fromTheme(name).pixmap(size)));
-        pix = d->iconCache[qMakePair(name, size)];
+        QPixmap pix = QIcon::fromTheme(name, d->fallBackIcon).pixmap(size);
+        d->iconCache.insert(qMakePair(name, size), new QPixmap(pix));
+
+        return pix;
     }
 
-    return (*pix); // ownership of the pointer is kept by the icon cache.
+    return (*cachePix); // ownership of the pointer is kept by the icon cache.
 }
 
 bool AlbumThumbnailLoader::getTagThumbnail(TAlbum* const album, QPixmap& icon)
@@ -461,7 +466,7 @@ void AlbumThumbnailLoader::addUrl(Album* const album, qlonglong id)
 
         // insert new entry to map, add album globalID
 
-        QList<int> &list = d->idAlbumMap[QPair<qlonglong, QString>(id, faceRectStr)];
+        QList<int>& list = d->idAlbumMap[QPair<qlonglong, QString>(id, faceRectStr)];
         list.removeAll(album->globalID());
         list.append(album->globalID());
     }

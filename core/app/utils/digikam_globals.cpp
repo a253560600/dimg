@@ -75,20 +75,28 @@ QStringList supportedImageMimeTypes(QIODevice::OpenModeFlag mode, QString& allTy
     switch (mode)
     {
         case QIODevice::ReadOnly:
+        {
             supported = QImageReader::supportedImageFormats();
             break;
+        }
 
         case QIODevice::WriteOnly:
+        {
             supported = QImageWriter::supportedImageFormats();
             break;
+        }
 
         case QIODevice::ReadWrite:
+        {
             supported = QImageWriter::supportedImageFormats() + QImageReader::supportedImageFormats();
             break;
+        }
 
         default:
+        {
             qCDebug(DIGIKAM_GENERAL_LOG) << "Unsupported mode!";
             break;
+        }
     }
 
     foreach (const QByteArray& frm, supported)
@@ -128,6 +136,17 @@ QStringList supportedImageMimeTypes(QIODevice::OpenModeFlag mode, QString& allTy
 
 #endif // HAVE_X265
 
+#ifdef HAVE_IMAGE_MAGICK
+
+        if (QString::fromLatin1(frm).contains(QLatin1String("fts"),  Qt::CaseInsensitive) ||
+            QString::fromLatin1(frm).contains(QLatin1String("fit"),  Qt::CaseInsensitive) ||
+            QString::fromLatin1(frm).contains(QLatin1String("fits"), Qt::CaseInsensitive))
+        {
+            continue;
+        }
+
+#endif // HAVE_IMAGE_MAGICK
+
         formats.append(i18n("%1 Image (%2)", QString::fromLatin1(frm).toUpper(), QLatin1String("*.") + QLatin1String(frm)));
         allTypes.append(QString::fromLatin1("*.%1 ").arg(QLatin1String(frm)));
     }
@@ -138,7 +157,7 @@ QStringList supportedImageMimeTypes(QIODevice::OpenModeFlag mode, QString& allTy
     allTypes.append(QLatin1String("*.jpg *.jpeg *.jpe "));
 
 #ifdef HAVE_JASPER
-    
+
     formats.append(i18n("JPEG2000 Image (*.jp2 *.j2k *.jpx *.pgx)"));
     allTypes.append(QLatin1String("*.jp2 *.j2k *.jpx *.pgx "));
 
@@ -150,9 +169,16 @@ QStringList supportedImageMimeTypes(QIODevice::OpenModeFlag mode, QString& allTy
 #ifdef HAVE_X265
 
     formats << i18n("High Efficiency Image Coding (*.heic *.heif)");
-    allTypes.append(QLatin1String("*.heic *.heif"));
+    allTypes.append(QLatin1String("*.heic *.heif "));
 
 #endif // HAVE_X265
+
+#ifdef HAVE_IMAGE_MAGICK
+
+    formats << i18n("Flexible Image Transport System (*.fts *.fit *.fits)");
+    allTypes.append(QLatin1String("*.fts *.fit *.fits "));
+
+#endif // HAVE_IMAGE_MAGICK
 
     if (mode != QIODevice::WriteOnly)
     {
@@ -170,16 +196,28 @@ void showRawCameraList()
     dlg->show();
 }
 
+bool isRunningInAppImageBundle()
+{
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+
+    if (env.contains(QLatin1String("APPIMAGE_ORIGINAL_LD_LIBRARY_PATH")) &&
+        env.contains(QLatin1String("APPIMAGE_ORIGINAL_QT_PLUGIN_PATH"))  &&
+        env.contains(QLatin1String("APPIMAGE_ORIGINAL_XDG_DATA_DIRS"))   &&
+        env.contains(QLatin1String("APPIMAGE_ORIGINAL_PATH")))
+    {
+        return true;
+    }
+
+    return false;
+}
+
 QProcessEnvironment adjustedEnvironmentForAppImage()
 {
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
 
     // If we are running into AppImage bundle, switch env var to the right values.
 
-    if (env.contains(QLatin1String("APPIMAGE_ORIGINAL_LD_LIBRARY_PATH")) &&
-        env.contains(QLatin1String("APPIMAGE_ORIGINAL_QT_PLUGIN_PATH"))  &&
-        env.contains(QLatin1String("APPIMAGE_ORIGINAL_XDG_DATA_DIRS"))   &&
-        env.contains(QLatin1String("APPIMAGE_ORIGINAL_PATH")))
+    if (isRunningInAppImageBundle())
     {
         qCDebug(DIGIKAM_GENERAL_LOG) << "Adjusting environment variables for AppImage bundle";
 
