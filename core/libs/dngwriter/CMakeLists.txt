@@ -11,9 +11,7 @@
 kde_enable_exceptions()
 
 include_directories(
-    $<TARGET_PROPERTY:Qt5::Widgets,INTERFACE_INCLUDE_DIRECTORIES>
-
-    $<TARGET_PROPERTY:KF5::I18n,INTERFACE_INCLUDE_DIRECTORIES>
+    $<TARGET_PROPERTY:Qt5::Gui,INTERFACE_INCLUDE_DIRECTORIES>
 
     ${EXPAT_INCLUDE_DIR}
 
@@ -210,7 +208,7 @@ add_library(libdng STATIC
 #------------------------------------------------------------------------------------
 
 set(libdngwriter_SRCS
-    ${CMAKE_CURRENT_SOURCE_DIR}/dngsettings.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/dngsettings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/dngwriterhost.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/dngwriter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/dngwriter_p.cpp

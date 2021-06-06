@@ -128,7 +128,7 @@ set(libdimgfilters_SRCS
     #${CMAKE_CURRENT_SOURCE_DIR}/filters/transform/freerotationsettings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/transform/shearfilter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/transform/autocrop.cpp
-    #${CMAKE_CURRENT_SOURCE_DIR}/filters/greycstoration/greycstorationfilter.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/filters/greycstoration/greycstorationfilter.cpp
     #${CMAKE_CURRENT_SOURCE_DIR}/filters/greycstoration/greycstorationsettings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/lens/antivignettingfilter.cpp
     #${CMAKE_CURRENT_SOURCE_DIR}/filters/lens/antivignettingsettings.cpp

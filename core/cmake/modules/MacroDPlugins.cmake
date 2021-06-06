@@ -53,7 +53,7 @@ macro(DIGIKAM_ADD_DIMG_PLUGIN)
     endif()
 
     add_library(DImg_${_parse_results_NAME}_Plugin
-                MODULE ${_parse_results_SOURCES})
+                ${_parse_results_SOURCES})
 
     target_link_libraries(DImg_${_parse_results_NAME}_Plugin
 

@@ -71,9 +71,9 @@ if(WIN32)
 
 endif()
 
-include_directories(${CMAKE_BINARY_DIR}/core/libs/rawengine/libraw/
-                    ${CMAKE_SOURCE_DIR}/core/libs/rawengine/libraw
-                    ${CMAKE_SOURCE_DIR}/core/libs/dngwriter/extra/dng_sdk
+include_directories(${PROJECT_BINARY_DIR}/core/libs/rawengine/libraw/
+                    ${PROJECT_SOURCE_DIR}/core/libs/rawengine/libraw
+                    ${PROJECT_SOURCE_DIR}/core/libs/dngwriter/extra/dng_sdk
 )
 
 set(libraw_LIB_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/libraw/src/libraw_c_api.cpp

@@ -21,6 +21,11 @@ set(DIGIKAMCORE_OBJECTS
             $<TARGET_OBJECTS:core_dpluginsinterface_obj>
             $<TARGET_OBJECTS:core_libheif_obj>
             $<TARGET_OBJECTS:core_libde265_obj>
+
+            $<TARGET_OBJECTS:core_libmd5_obj>
+            $<TARGET_OBJECTS:core_libxmp_obj>
+            $<TARGET_OBJECTS:core_libdng_obj>
+            $<TARGET_OBJECTS:core_dngwriter_obj>
 )
 
 add_library(digikamcore

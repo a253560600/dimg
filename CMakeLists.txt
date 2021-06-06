@@ -41,7 +41,7 @@ set(LENSFUN_MIN_VERSION   "0.2.6.0")      # For Lens auto-correction plugin
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/core/cmake/modules)
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/core/cmake/modules)
 
 include(CMakePackageConfigHelpers)
 include(GenerateExportHeader)
@@ -368,7 +368,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/app/utils/digikam_opencv.h.cmake
 
     # for config headers digikam_version.h digikam_gitversion.h digikam_config.h
     # digikam_dbconfig.h digikam_opencv.h
-    include_directories(${CMAKE_CURRENT_BINARY_DIR}/core/app/utils)
+    include_directories(${PROJECT_BINARY_DIR}/core/app/utils)
 
     include_directories(${OpenCV_INCLUDE_DIRS})
 
@@ -381,6 +381,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/app/utils/digikam_opencv.h.cmake
     endif()
 
 add_subdirectory(core/app)
+add_subdirectory(core/libs/dngwriter)
 add_subdirectory(core/libs/rawengine)
 add_subdirectory(core/libs/dplugins)
 add_subdirectory(core/libs/dimg)
