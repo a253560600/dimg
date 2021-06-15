@@ -3,10 +3,10 @@
  * This file is a part of digiKam project
  * https://www.digikam.org
  *
- * Date        : 2016-09-29
- * Description : migration page from digikam4
+ * Date        : 2021-04-18
+ * Description : ExifTool loading view.
  *
- * Copyright (C) 2016 by Antonio Larrosa <alarrosa at suse dot com>
+ * Copyright (C) 2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -21,40 +21,35 @@
  *
  * ============================================================ */
 
-#ifndef DIGIKAM_MIGRATE_FROM_DIGIKAM4_PAGE_H
-#define DIGIKAM_MIGRATE_FROM_DIGIKAM4_PAGE_H
+#ifndef DIGIKAM_EXIF_TOOL_LOADING_VIEW_H
+#define DIGIKAM_EXIF_TOOL_LOADING_VIEW_H
+
+// Qt includes
+
+#include <QWidget>
+#include <QString>
 
 // Local includes
 
-#include "dwizardpage.h"
+#include "digikam_export.h"
 
 namespace Digikam
 {
 
-class MigrateFromDigikam4Page : public DWizardPage
+class DIGIKAM_EXPORT ExifToolLoadingView : public QWidget
 {
     Q_OBJECT
 
 public:
 
-    explicit MigrateFromDigikam4Page(QWizard* const dlg);
-    ~MigrateFromDigikam4Page()      override;
+    explicit ExifToolLoadingView(QWidget* const parent);
+    ~ExifToolLoadingView() override;
 
-    /**
-     * Returns true if the user selected to do a migration
-     */
-    bool isMigrationChecked() const;
-    void doMigration();
-    int  nextId()             const override;
+    void setBusy(bool b);
 
-    /**
-     * Return true if migration data are available on the system
-     */
-    static bool checkForMigration();
+private Q_SLOTS:
 
-public Q_SLOTS:
-
-    void migrationToggled(bool b);
+    void slotProgressTimerDone();
 
 private:
 
@@ -64,4 +59,4 @@ private:
 
 } // namespace Digikam
 
-#endif // DIGIKAM_MIGRATE_FROM_DIGIKAM4_PAGE_H
+#endif // DIGIKAM_EXIF_TOOL_LOADING_VIEW_H

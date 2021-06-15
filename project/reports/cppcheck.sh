@@ -49,6 +49,8 @@ done
 cppcheck -j$CPU_CORES \
          -DQ_OS_LINUX \
          --verbose \
+         --std=c++14 \
+         --library=qt.cfg \
          --inline-suppr \
          --xml-version=2 \
          --platform=unix64 \
@@ -75,10 +77,10 @@ cppcheck -j$CPU_CORES \
          --suppress=class_X_Y \
          --suppress=ConfigurationNotChecked \
          --suppress=unmatchedSuppression \
+         --output-file=report.cppcheck.xml \
          $IGNORE_DIRS \
          $INCLUDE_DIRS \
-         ../../core \
-         2> report.cppcheck.xml
+         ../../core
 
 cppcheck-htmlreport --file=report.cppcheck.xml \
                     --report-dir=$REPORT_DIR \
